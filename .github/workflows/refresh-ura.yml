@@ -1,0 +1,61 @@
+name: Refresh URA data
+
+on:
+  schedule:
+    # URA refreshes private-residential transaction data around the 15th of each
+    # month. Run a day later at 02:00 UTC (~10:00 SGT) to pick up the new batch.
+    - cron: '0 2 16 * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: write # to dispatch the deploy workflow after a data change
+
+concurrency:
+  group: refresh-ura
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Pull and bake URA data
+        env:
+          URA_ACCESS_KEY: ${{ secrets.URA_ACCESS_KEY }}
+        run: python scripts/pull_ura.py
+
+      - name: Commit refreshed data
+        id: commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/transactions.json data/meta.json
+          if git diff --staged --quiet; then
+            echo "No data changes — nothing to commit."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "data: refresh URA transactions ($(date -u +%Y-%m-%d))"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # A push made with the default GITHUB_TOKEN does NOT trigger deploy.yml's
+      # `push` event (anti-recursion). workflow_dispatch is the documented
+      # exception, so kick the deploy explicitly when data actually changed.
+      - name: Trigger site rebuild
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --ref main

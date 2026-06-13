@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" class="dark">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#060814" />
+		<meta name="color-scheme" content="dark light" />
+
+		<!-- Personal project — keep it out of search indexes. -->
+		<meta name="robots" content="noindex,nofollow" />
+
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="
+				default-src 'self';
+				script-src 'self' 'unsafe-inline';
+				style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+				img-src 'self' blob: data:;
+				font-src 'self' https://fonts.gstatic.com;
+				connect-src 'self';
+				base-uri 'self';
+				form-action 'self'
+			"
+		/>
+		<meta name="referrer" content="no-referrer" />
+
+		<title>Property Prices · properties.gaanesh.com</title>
+		<meta
+			name="description"
+			content="A personal, read-only viewer over Singapore URA private residential transaction data. Median PSF trends and price distributions for a small watchlist of projects. Not affiliated with URA."
+		/>
+
+		<link
+			rel="icon"
+			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2367e8f9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='4' y1='20' x2='20' y2='20'/%3E%3Cpolyline points='4 16 8 12 12 14 20 6'/%3E%3Cpolyline points='14 6 20 6 20 12'/%3E%3C/svg%3E"
+		/>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+			rel="stylesheet"
+		/>
+
+		<script>
+			(function () {
+				try {
+					var saved = localStorage.getItem('theme');
+					var prefersDark =
+						window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+					var dark = saved ? saved === 'dark' : prefersDark;
+					if (!dark) document.documentElement.classList.remove('dark');
+					else document.documentElement.classList.add('dark');
+				} catch (_) {}
+			})();
+		</script>
+
+		%sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>
