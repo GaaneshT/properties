@@ -34,6 +34,7 @@
 						<li><strong>Median PSF / trend:</strong> price ÷ (area × 10.7639), median by quarter/year; trend is the change in yearly-median PSF over the window (years with ≥3 sales).</li>
 						<li><strong>Repeat-sale returns (approximate):</strong> the feed has <em>no unit number</em>, so “same unit” is proxied by identical floor area + floor band within a project, then sales paired chronologically. A documented approximation — pair counts are shown for context.</li>
 						<li><strong>New→resale uplift:</strong> launch-vintage new-sale median PSF vs recent (≤24-month) resale median PSF.</li>
+						<li><strong>Gross rental yield:</strong> latest median rent PSF (URA PMI_Resi_Rental_Median) × 12 ÷ sale median PSF. Available where URA publishes rental medians.</li>
 						<li><strong>Floor / size premium:</strong> median PSF per floor band and size bucket vs the project median.</li>
 						<li><strong>Velocity:</strong> average transactions per year over the window.</li>
 						<li>Figures default to <strong>resale</strong> (mixing in new launches distorts trends).</li>

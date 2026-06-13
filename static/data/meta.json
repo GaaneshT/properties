@@ -1,10 +1,11 @@
 {
-  "refreshedAt": "2026-06-13T20:01:59.779114+00:00",
-  "source": "URA Data Service \u00b7 PMI_Resi_Transaction (60-month rolling window)",
+  "refreshedAt": "2026-06-13T20:09:58.780381+00:00",
+  "source": "URA Data Service \u00b7 PMI_Resi_Transaction + PMI_Resi_Rental_Median (60-month window)",
   "service": "PMI_Resi_Transaction",
   "projectCount": 2986,
   "transactionCount": 137766,
   "districtCount": 28,
+  "rentalProjectCount": 917,
   "note": "Derived view (computed PSF, medians, trends, distributions, approximate repeat-sale returns) over URA caveat data. Caveat data covers ~80\u201390% of resale/sub-sale volume on a 60-month rolling window. Repeat-sale matching is approximate: the feed has no unit number, so 'same unit' is proxied by identical floor area + floor band within a project. Not affiliated with or endorsed by URA.",
   "mock": false
 }

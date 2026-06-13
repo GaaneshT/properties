@@ -29,8 +29,12 @@ export type IndexEntry = {
 	repeatPairs: number;
 	repeatAnnReturn: number | null;
 	floorPremiumPct: number | null;
+	rentPsf: number | null;
+	grossYield: number | null;
 	yearly: [number, number, number][]; // [year, medianPsf, count]
 };
+
+export type RentalPoint = { refPeriod: string; median: number };
 
 export type ShardTxn = {
 	date: string;
@@ -87,6 +91,7 @@ export type ShardProject = {
 	uplift: Uplift;
 	repeatStats: { pairs: number; medianAnnReturnPct: number | null; medianHoldYears: number | null };
 	repeatSales: RepeatSale[];
+	rental: { rentPsf: number | null; grossYield: number | null; series: RentalPoint[] };
 };
 
 export type Meta = {
@@ -96,6 +101,7 @@ export type Meta = {
 	projectCount: number;
 	transactionCount: number;
 	districtCount: number;
+	rentalProjectCount?: number;
 	note: string;
 	mock?: boolean;
 };

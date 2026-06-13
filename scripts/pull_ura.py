@@ -103,7 +103,33 @@ def get_batch(access_key: str, token: str, batch: int, *, retries: int = 4) -> l
     raise RuntimeError(f"could not fetch batch {batch} after {retries} attempts: {last_err}")
 
 
-def fetch_all(access_key: str) -> list[dict]:
+RENTAL_SERVICE = "PMI_Resi_Rental_Median"
+
+
+def get_rental(access_key: str, token: str, *, retries: int = 4) -> list[dict]:
+    headers = {"AccessKey": access_key, "Token": token, "User-Agent": USER_AGENT}
+    params = {"service": RENTAL_SERVICE}
+    last_err: Exception | None = None
+    for attempt in range(retries):
+        try:
+            r = requests.get(DATA_URL, headers=headers, params=params, timeout=90)
+            r.raise_for_status()
+            payload = r.json()
+            if payload.get("Status") != "Success":
+                raise RuntimeError(f"rental not successful: {payload.get('Message')!r}")
+            result = payload.get("Result") or []
+            print(f"  rental medians: {len(result)} projects")
+            return result
+        except Exception as e:  # noqa: BLE001
+            last_err = e
+            wait = 2 ** attempt
+            print(f"  rental attempt {attempt + 1} failed ({e}); retry in {wait}s", file=sys.stderr)
+            time.sleep(wait)
+    print(f"  WARNING: could not fetch rental data ({last_err}); continuing without yields", file=sys.stderr)
+    return []
+
+
+def fetch_all(access_key: str) -> tuple[list[dict], list[dict]]:
     print("Exchanging AccessKey for daily token…")
     token = get_token(access_key)
     print("Pulling 4 transaction batches…")
@@ -111,7 +137,9 @@ def fetch_all(access_key: str) -> list[dict]:
     for b in BATCHES:
         merged.extend(get_batch(access_key, token, b))
         time.sleep(1)
-    return merged
+    print("Pulling rental medians…")
+    rental = get_rental(access_key, token)
+    return merged, rental
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -358,8 +386,39 @@ def trend_pct(yearly: list[list]) -> float | None:
     return round((last / first - 1) * 100, 1)
 
 
-def build(projects_raw: list[dict], ref_month: int) -> tuple[list[dict], dict[str, list[dict]]]:
+def rperiod_num(p: str) -> int:
+    """'2023Q4' -> sortable int."""
+    try:
+        return int(p[:4]) * 4 + (int(p[5]) - 1)
+    except (ValueError, IndexError):
+        return 0
+
+
+def build_rental(rental_raw: list[dict]) -> dict[str, dict]:
+    """name(upper) -> { rentPsf (latest monthly median $/sqft), series }."""
+    out: dict[str, dict] = {}
+    for p in rental_raw:
+        name = (p.get("project") or "").strip()
+        if not name:
+            continue
+        pts = []
+        for rm in p.get("rentalMedian") or []:
+            m = to_float(rm.get("median"))
+            if m is None or not rm.get("refPeriod"):
+                continue
+            pts.append({"refPeriod": rm["refPeriod"], "median": round(m, 2)})
+        if not pts:
+            continue
+        pts.sort(key=lambda x: rperiod_num(x["refPeriod"]))
+        out[name.upper()] = {"rentPsf": pts[-1]["median"], "series": pts}
+    return out
+
+
+def build(
+    projects_raw: list[dict], ref_month: int, rental_map: dict[str, dict] | None = None
+) -> tuple[list[dict], dict[str, list[dict]]]:
     """Returns (index_entries, shards_by_district)."""
+    rental_map = rental_map or {}
     wanted = {n.upper() for n in WATCHLIST} if WATCHLIST else None
     by_name: dict[str, dict] = {}
 
@@ -422,6 +481,13 @@ def build(projects_raw: list[dict], ref_month: int) -> tuple[list[dict], dict[st
             if len(floors) >= 2 and floors[0]["medianPsf"]
             else None
         )
+
+        # Gross rental yield: latest monthly median rent PSF × 12 ÷ sale median PSF.
+        rent = rental_map.get(name.upper())
+        rent_psf = rent["rentPsf"] if rent else None
+        gross_yield = (
+            round(rent_psf * 12 / proj_med * 100, 2) if (rent_psf and proj_med) else None
+        )
         ptypes = sorted({t["propertyType"] for t in txns if t["propertyType"]})
         tclass = max(
             {t["tenureClass"] for t in txns},
@@ -452,6 +518,8 @@ def build(projects_raw: list[dict], ref_month: int) -> tuple[list[dict], dict[st
                 "repeatPairs": len(rs_pairs),
                 "repeatAnnReturn": rs_ann,
                 "floorPremiumPct": floor_premium,
+                "rentPsf": rent_psf,
+                "grossYield": gross_yield,
                 "yearly": yearly,
             }
         )
@@ -490,6 +558,11 @@ def build(projects_raw: list[dict], ref_month: int) -> tuple[list[dict], dict[st
                     "medianHoldYears": rs_hold,
                 },
                 "repeatSales": rs_pairs[:80],
+                "rental": {
+                    "rentPsf": rent_psf,
+                    "grossYield": gross_yield,
+                    "series": rent["series"] if rent else [],
+                },
             }
         )
 
@@ -541,6 +614,22 @@ def mock_raw() -> list[dict]:
     ]
 
 
+def mock_rental() -> list[dict]:
+    def rm(period, median, d):
+        return {"refPeriod": period, "median": median, "psf25": median - 0.3, "psf75": median + 0.4, "district": d}
+
+    return [
+        {
+            "project": "CARISSA PARK CONDOMINIUM", "street": "FLORA DRIVE", "x": "1", "y": "1",
+            "rentalMedian": [rm("2024Q3", 3.2, "17"), rm("2024Q4", 3.3, "17"), rm("2025Q1", 3.4, "17")],
+        },
+        {
+            "project": "REFLECTIONS AT KEPPEL BAY", "street": "KEPPEL BAY VIEW", "x": "1", "y": "1",
+            "rentalMedian": [rm("2024Q3", 4.6, "04"), rm("2024Q4", 4.8, "04"), rm("2025Q1", 5.0, "04")],
+        },
+    ]
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Main
 # ─────────────────────────────────────────────────────────────────────────────
@@ -563,23 +652,25 @@ def main() -> int:
     if args.mock:
         print("MOCK mode — using baked sample response (no API call).")
         raw = mock_raw()
+        rental_raw = mock_rental()
         source = "mock sample (not real URA data)"
     else:
         access_key = os.environ.get("URA_ACCESS_KEY")
         if not access_key:
             print("ERROR: URA_ACCESS_KEY is not set. Set it, or run with --mock.", file=sys.stderr)
             return 2
-        raw = fetch_all(access_key)
-        source = "URA Data Service · PMI_Resi_Transaction (60-month rolling window)"
+        raw, rental_raw = fetch_all(access_key)
+        source = "URA Data Service · PMI_Resi_Transaction + PMI_Resi_Rental_Median (60-month window)"
 
     if args.dump_raw:
         Path(args.dump_raw).write_text(json.dumps(raw), encoding="utf-8")
         print(f"Wrote raw merge to {args.dump_raw}")
 
     ref_month = max_month(raw) or 0
+    rental_map = build_rental(rental_raw)
     scope = "all projects" if not WATCHLIST else f"{len(WATCHLIST)} watchlist projects"
-    print(f"Building derived data ({scope})…")
-    index, shards = build(raw, ref_month)
+    print(f"Building derived data ({scope}); {len(rental_map)} projects with rental medians…")
+    index, shards = build(raw, ref_month, rental_map)
 
     SHARD_DIR.mkdir(parents=True, exist_ok=True)
     # Clear stale shards so removed districts don't linger.
@@ -605,6 +696,7 @@ def main() -> int:
         "projectCount": len(index),
         "transactionCount": total_txns,
         "districtCount": len(shards),
+        "rentalProjectCount": len(rental_map),
         "note": (
             "Derived view (computed PSF, medians, trends, distributions, approximate "
             "repeat-sale returns) over URA caveat data. Caveat data covers ~80–90% of "

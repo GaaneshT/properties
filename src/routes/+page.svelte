@@ -96,6 +96,7 @@
 		| 'medianPsf'
 		| 'trendPct'
 		| 'repeatAnnReturn'
+		| 'grossYield'
 		| 'medianPrice'
 		| 'medianAreaSqft'
 		| 'txnsPerYear'
@@ -260,6 +261,7 @@
 			label: 'Return p.a.',
 			help: 'Median annualised return on approximate repeat sales (same size + floor band)'
 		},
+		{ key: 'grossYield', label: 'Gross yield', help: 'Latest median rent PSF × 12 ÷ sale median PSF' },
 		{ key: 'medianPrice', label: 'Median price' },
 		{ key: 'medianAreaSqft', label: 'Median size' },
 		{ key: 'txnsPerYear', label: 'Sold/yr', help: 'Average transactions per year (liquidity)' },
@@ -421,6 +423,7 @@
 							</div>
 						</td>
 						<td class="px-3 py-2.5 font-medium {trendColor(e.repeatAnnReturn)}" title={e.repeatPairs ? `${e.repeatPairs} repeat pairs` : 'no repeat sales found'}>{fmtTrend(e.repeatAnnReturn)}</td>
+						<td class="px-3 py-2.5 text-ink-700 dark:text-ghost-200">{e.grossYield != null ? `${e.grossYield.toFixed(1)}%` : '—'}</td>
 						<td class="px-3 py-2.5 text-ink-700 dark:text-ghost-200">{fmtPrice(e.medianPrice)}</td>
 						<td class="px-3 py-2.5 text-ghost-600 dark:text-ghost-300">{e.medianAreaSqft.toLocaleString()}</td>
 						<td class="px-3 py-2.5 text-ghost-600 dark:text-ghost-300">{e.txnsPerYear}</td>
@@ -428,7 +431,7 @@
 					</tr>
 				{/each}
 				{#if visible.length === 0}
-					<tr><td colspan="9" class="px-3 py-8 text-center text-sm text-ghost-500">No projects match these filters.</td></tr>
+					<tr><td colspan="10" class="px-3 py-8 text-center text-sm text-ghost-500">No projects match these filters.</td></tr>
 				{/if}
 			</tbody>
 		</table>
@@ -531,11 +534,16 @@
 									<h4 class="truncate text-sm font-semibold text-ink-900 dark:text-white">{v.entry.project}</h4>
 								</div>
 
-								<div class="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
+								<div class="mt-3 grid grid-cols-2 gap-2 text-center text-xs sm:grid-cols-4">
 									<div class="rounded-lg bg-ghost-50 p-2 dark:bg-ink-950/60">
 										<div class="text-ghost-500">Return p.a.</div>
 										<div class="mt-0.5 font-semibold {trendColor(v.shard.repeatStats.medianAnnReturnPct)}">{fmtTrend(v.shard.repeatStats.medianAnnReturnPct)}</div>
 										<div class="text-[10px] text-ghost-500">{v.shard.repeatStats.pairs} pairs</div>
+									</div>
+									<div class="rounded-lg bg-ghost-50 p-2 dark:bg-ink-950/60">
+										<div class="text-ghost-500">Gross yield</div>
+										<div class="mt-0.5 font-semibold text-ink-900 dark:text-white">{v.shard.rental.grossYield != null ? `${v.shard.rental.grossYield.toFixed(1)}%` : '—'}</div>
+										<div class="text-[10px] text-ghost-500">{v.shard.rental.rentPsf != null ? `$${v.shard.rental.rentPsf}/sqft/mo` : 'no rent data'}</div>
 									</div>
 									<div class="rounded-lg bg-ghost-50 p-2 dark:bg-ink-950/60">
 										<div class="text-ghost-500">New→resale</div>
