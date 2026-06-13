@@ -242,6 +242,107 @@ def yearly_series(rows: list[dict]) -> list[list]:
     return [[y, med(v), len(v)] for y, v in sorted(by_y.items())]
 
 
+# ── Advanced analytics ───────────────────────────────────────────────────────
+def repeat_sales(txns: list[dict]) -> tuple[list[dict], float | None, float | None]:
+    """Approximate repeat-sale matching.
+
+    The public caveat feed has NO unit number, so we proxy "same unit" by exact
+    floor-area (sqm) + floor band within a project, then pair sales chronologically.
+    This is a documented approximation — in stacks with many identical-size units
+    it can mismatch — so we surface the pair count for context. Returns
+    (pairs, median annualised return %, median holding years).
+    """
+    groups: dict[tuple, list[dict]] = {}
+    for t in txns:
+        if not t["floorRange"]:
+            continue
+        groups.setdefault((t["areaSqm"], t["floorRange"]), []).append(t)
+
+    pairs: list[dict] = []
+    for rows in groups.values():
+        if len(rows) < 2:
+            continue
+        rows.sort(key=lambda r: r["monthIndex"])
+        for a, b in zip(rows, rows[1:]):
+            months = b["monthIndex"] - a["monthIndex"]
+            if months < 9 or a["price"] <= 0:  # <0.75yr → skip flips / same-quarter noise
+                continue
+            years = months / 12
+            ann = ((b["price"] / a["price"]) ** (1 / years) - 1) * 100
+            pairs.append({
+                "areaSqft": b["areaSqft"],
+                "floorRange": b["floorRange"],
+                "buyDate": a["date"],
+                "sellDate": b["date"],
+                "buyPrice": a["price"],
+                "sellPrice": b["price"],
+                "holdYears": round(years, 1),
+                "annReturnPct": round(ann, 1),
+                "totalReturnPct": round((b["price"] / a["price"] - 1) * 100, 1),
+            })
+    anns = [p["annReturnPct"] for p in pairs]
+    holds = [p["holdYears"] for p in pairs]
+    pairs.sort(key=lambda p: p["sellDate"], reverse=True)
+    return pairs, (med(anns) if anns else None), (med(holds) if holds else None)
+
+
+def by_floor(rows: list[dict], proj_med: float) -> list[dict]:
+    g: dict[str, list[float]] = {}
+    for t in rows:
+        if t["floorRange"]:
+            g.setdefault(t["floorRange"], []).append(t["psf"])
+    out = [
+        {
+            "floorRange": f,
+            "medianPsf": med(v),
+            "count": len(v),
+            "premiumPct": round((med(v) / proj_med - 1) * 100, 1) if proj_med else None,
+        }
+        for f, v in g.items()
+    ]
+    out.sort(key=lambda r: r["floorRange"])
+    return out
+
+
+SIZE_BUCKETS = [
+    (0, 600, "<600"),
+    (600, 900, "600–900"),
+    (900, 1200, "900–1,200"),
+    (1200, 1500, "1,200–1,500"),
+    (1500, 10**9, "1,500+"),
+]
+
+
+def by_size(rows: list[dict], proj_med: float) -> list[dict]:
+    out = []
+    for lo, hi, label in SIZE_BUCKETS:
+        v = [t["psf"] for t in rows if lo <= t["areaSqft"] < hi]
+        if v:
+            out.append({
+                "bucket": label,
+                "medianPsf": med(v),
+                "count": len(v),
+                "premiumPct": round((med(v) / proj_med - 1) * 100, 1) if proj_med else None,
+            })
+    return out
+
+
+def uplift(txns: list[dict], ref_month: int) -> dict:
+    """New-sale (launch vintage) PSF vs current resale PSF."""
+    new_psfs = [t["psf"] for t in txns if t["typeOfSale"] == "1"]
+    resale = [t for t in txns if t["typeOfSale"] == "3"]
+    recent = [t for t in resale if ref_month - t["monthIndex"] < 24] or resale
+    new_med = med(new_psfs) if new_psfs else None
+    cur_med = med([t["psf"] for t in recent]) if recent else None
+    pct = round((cur_med / new_med - 1) * 100, 1) if (new_med and cur_med) else None
+    return {
+        "newMedianPsf": new_med,
+        "newCount": len(new_psfs),
+        "currentResalePsf": cur_med,
+        "upliftPct": pct,
+    }
+
+
 def trend_pct(yearly: list[list]) -> float | None:
     """% change in yearly-median PSF, first reliable year -> last reliable year.
 
@@ -304,8 +405,23 @@ def build(projects_raw: list[dict], ref_month: int) -> tuple[list[dict], dict[st
         psfs = [t["psf"] for t in basis_rows]
         prices = [t["price"] for t in basis_rows]
         areas = [t["areaSqft"] for t in basis_rows]
+        proj_med = med(psfs)
         yearly = yearly_series(basis_rows)
         recent12 = sum(1 for t in basis_rows if ref_month - t["monthIndex"] < 12)
+
+        # Advanced analytics.
+        rs_pairs, rs_ann, rs_hold = repeat_sales(txns)
+        up = uplift(txns, ref_month)
+        floors = by_floor(basis_rows, proj_med)
+        sizes = by_size(basis_rows, proj_med)
+        months = [t["monthIndex"] for t in txns]
+        span_years = max((max(months) - min(months)) / 12, 1.0)
+        txns_per_year = round(len(txns) / span_years, 1)
+        floor_premium = (
+            round((floors[-1]["medianPsf"] / floors[0]["medianPsf"] - 1) * 100, 1)
+            if len(floors) >= 2 and floors[0]["medianPsf"]
+            else None
+        )
         ptypes = sorted({t["propertyType"] for t in txns if t["propertyType"]})
         tclass = max(
             {t["tenureClass"] for t in txns},
@@ -314,34 +430,28 @@ def build(projects_raw: list[dict], ref_month: int) -> tuple[list[dict], dict[st
         tenure_sample = next((t["tenure"] for t in txns if t["tenure"]), "")
         dkey = f"D{district}" if district else "DNA"
 
+        # Lean index — only what the league table + KPIs + sparkline need. Heavier
+        # detail (ranges, property types, breakdowns) lives in the district shards.
         index.append(
             {
                 "project": name,
                 "street": entry["street"],
                 "district": district,
                 "region": entry["marketSegment"],
-                "propertyTypes": ptypes,
                 "category": categorize(txns),
                 "tenureClass": tclass,
-                "tenure": tenure_sample,
-                "x": entry["x"],
-                "y": entry["y"],
                 "basis": basis,
-                "n": len(basis_rows),
                 "nAll": len(txns),
                 "recent12": recent12,
                 "medianPsf": med(psfs),
-                "minPsf": round(min(psfs), 2),
-                "maxPsf": round(max(psfs), 2),
                 "medianPrice": round(median(prices)),
-                "minPrice": min(prices),
-                "maxPrice": max(prices),
                 "medianAreaSqft": round(median(areas)),
-                "minAreaSqft": min(areas),
-                "maxAreaSqft": max(areas),
                 "trendPct": trend_pct(yearly),
-                "firstYear": yearly[0][0],
-                "lastYear": yearly[-1][0],
+                "txnsPerYear": txns_per_year,
+                "upliftPct": up["upliftPct"],
+                "repeatPairs": len(rs_pairs),
+                "repeatAnnReturn": rs_ann,
+                "floorPremiumPct": floor_premium,
                 "yearly": yearly,
             }
         )
@@ -371,6 +481,15 @@ def build(projects_raw: list[dict], ref_month: int) -> tuple[list[dict], dict[st
                 "tenureClass": tclass,
                 "transactions": slim,
                 "summary": summarize(txns),
+                "byFloor": floors,
+                "bySize": sizes,
+                "uplift": up,
+                "repeatStats": {
+                    "pairs": len(rs_pairs),
+                    "medianAnnReturnPct": rs_ann,
+                    "medianHoldYears": rs_hold,
+                },
+                "repeatSales": rs_pairs[:80],
             }
         )
 
@@ -487,9 +606,12 @@ def main() -> int:
         "transactionCount": total_txns,
         "districtCount": len(shards),
         "note": (
-            "Derived view (computed PSF, medians, trends, distributions) over URA "
-            "caveat data. Caveat data covers ~80–90% of resale/sub-sale volume on a "
-            "60-month rolling window. Not affiliated with or endorsed by URA."
+            "Derived view (computed PSF, medians, trends, distributions, approximate "
+            "repeat-sale returns) over URA caveat data. Caveat data covers ~80–90% of "
+            "resale/sub-sale volume on a 60-month rolling window. Repeat-sale matching "
+            "is approximate: the feed has no unit number, so 'same unit' is proxied by "
+            "identical floor area + floor band within a project. Not affiliated with or "
+            "endorsed by URA."
         ),
         "mock": bool(args.mock),
     }

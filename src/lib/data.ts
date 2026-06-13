@@ -15,28 +15,20 @@ export type IndexEntry = {
 	street: string;
 	district: string;
 	region: Region;
-	propertyTypes: string[];
 	category: Category;
 	tenureClass: TenureClass;
-	tenure: string;
-	x: string;
-	y: string;
 	basis: 'resale' | 'all';
-	n: number;
 	nAll: number;
 	recent12: number;
 	medianPsf: number;
-	minPsf: number;
-	maxPsf: number;
 	medianPrice: number;
-	minPrice: number;
-	maxPrice: number;
 	medianAreaSqft: number;
-	minAreaSqft: number;
-	maxAreaSqft: number;
 	trendPct: number | null;
-	firstYear: number;
-	lastYear: number;
+	txnsPerYear: number;
+	upliftPct: number | null;
+	repeatPairs: number;
+	repeatAnnReturn: number | null;
+	floorPremiumPct: number | null;
 	yearly: [number, number, number][]; // [year, medianPsf, count]
 };
 
@@ -52,6 +44,36 @@ export type ShardTxn = {
 	propertyType: string;
 };
 
+export type FloorPremium = {
+	floorRange: string;
+	medianPsf: number;
+	count: number;
+	premiumPct: number | null;
+};
+export type SizePremium = {
+	bucket: string;
+	medianPsf: number;
+	count: number;
+	premiumPct: number | null;
+};
+export type RepeatSale = {
+	areaSqft: number;
+	floorRange: string;
+	buyDate: string;
+	sellDate: string;
+	buyPrice: number;
+	sellPrice: number;
+	holdYears: number;
+	annReturnPct: number;
+	totalReturnPct: number;
+};
+export type Uplift = {
+	newMedianPsf: number | null;
+	newCount: number;
+	currentResalePsf: number | null;
+	upliftPct: number | null;
+};
+
 export type ShardProject = {
 	project: string;
 	street: string;
@@ -60,6 +82,11 @@ export type ShardProject = {
 	tenureClass: TenureClass;
 	transactions: ShardTxn[];
 	summary: Record<string, unknown>;
+	byFloor: FloorPremium[];
+	bySize: SizePremium[];
+	uplift: Uplift;
+	repeatStats: { pairs: number; medianAnnReturnPct: number | null; medianHoldYears: number | null };
+	repeatSales: RepeatSale[];
 };
 
 export type Meta = {

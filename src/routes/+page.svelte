@@ -30,15 +30,57 @@
 	let entries = $state<IndexEntry[]>([]);
 	let loading = $state(true);
 	let loadError = $state<string | null>(null);
+	let ready = $state(false); // URL parsed; safe to start writing it back
 
 	onMount(async () => {
 		try {
 			entries = await loadIndex();
+			applyUrl();
 		} catch (e) {
 			loadError = e instanceof Error ? e.message : String(e);
 		} finally {
 			loading = false;
+			ready = true;
 		}
+	});
+
+	// Restore analysis from a shared link.
+	function applyUrl() {
+		const p = new URLSearchParams(location.search);
+		const g = (k: string) => p.get(k);
+		if (g('cat')) category = g('cat') as Category | 'all';
+		if (g('region')) region = g('region') as typeof region;
+		if (g('tenure')) tenure = g('tenure') as typeof tenure;
+		if (g('q')) search = g('q')!;
+		if (g('min') !== null) minVolume = Number(g('min')) || 0;
+		if (g('sort')) sortKey = g('sort') as SortKey;
+		if (g('dir')) sortDir = g('dir') as 'asc' | 'desc';
+		if (g('sel')) selected = new Set(g('sel')!.split('~').filter(Boolean));
+		if (g('sale')) sales = new Set(g('sale')!.split('') as SaleCode[]);
+		if (g('ct')) chartTenure = g('ct') as typeof chartTenure;
+		if (g('tab')) compareTab = g('tab') as typeof compareTab;
+	}
+
+	// Keep the URL in sync so any analysis is linkable/shareable.
+	$effect(() => {
+		if (!ready || typeof window === 'undefined') return;
+		const p = new URLSearchParams();
+		if (category !== 'condo') p.set('cat', category);
+		if (region !== 'all') p.set('region', region);
+		if (tenure !== 'all') p.set('tenure', tenure);
+		if (search.trim()) p.set('q', search.trim());
+		if (minVolume !== 5) p.set('min', String(minVolume));
+		if (sortKey !== 'nAll') p.set('sort', sortKey);
+		if (sortDir !== 'desc') p.set('dir', sortDir);
+		if (selected.size) {
+			p.set('sel', [...selected].join('~'));
+			const saleCode = [...sales].sort().join('');
+			if (saleCode !== '3') p.set('sale', saleCode);
+			if (chartTenure !== 'all') p.set('ct', chartTenure);
+			if (compareTab !== 'trend') p.set('tab', compareTab);
+		}
+		const qs = p.toString();
+		history.replaceState(history.state, '', qs ? `?${qs}` : location.pathname);
 	});
 
 	// ── Filters ───────────────────────────────────────────────────────────────
@@ -50,7 +92,16 @@
 
 	const ROW_CAP = 120;
 
-	type SortKey = 'medianPsf' | 'trendPct' | 'medianPrice' | 'medianAreaSqft' | 'recent12' | 'nAll' | 'project';
+	type SortKey =
+		| 'medianPsf'
+		| 'trendPct'
+		| 'repeatAnnReturn'
+		| 'medianPrice'
+		| 'medianAreaSqft'
+		| 'txnsPerYear'
+		| 'recent12'
+		| 'nAll'
+		| 'project';
 	let sortKey = $state<SortKey>('nAll');
 	let sortDir = $state<'asc' | 'desc'>('desc');
 
@@ -122,6 +173,17 @@
 	}
 	const clearSelection = () => (selected = new Set());
 
+	let copied = $state(false);
+	async function copyLink() {
+		try {
+			await navigator.clipboard.writeText(location.href);
+			copied = true;
+			setTimeout(() => (copied = false), 1500);
+		} catch {
+			/* clipboard blocked */
+		}
+	}
+
 	const selectedEntries = $derived(entries.filter((e) => selected.has(e.project)));
 
 	// Lazily fetch district shards for whatever is selected.
@@ -150,6 +212,14 @@
 	}
 	const chartFilters = $derived<Filters>({ sales, tenure: chartTenure });
 
+	let compareTab = $state<'trend' | 'scatter' | 'dist' | 'detail'>('trend');
+	const COMPARE_TABS = [
+		{ id: 'trend', label: 'PSF over time' },
+		{ id: 'scatter', label: 'PSF vs size' },
+		{ id: 'dist', label: 'Distribution' },
+		{ id: 'detail', label: 'Deep dive' }
+	] as const;
+
 	const views = $derived.by(() => {
 		return selectedEntries
 			.map((e, i) => {
@@ -159,6 +229,7 @@
 				return {
 					entry: e,
 					color: colorFor(i),
+					shard: sp,
 					txns,
 					points: medianPsfByQuarter(txns),
 					stats: statsFor(txns)
@@ -184,9 +255,14 @@
 		{ key: 'project', label: 'Project' },
 		{ key: 'medianPsf', label: 'Median PSF' },
 		{ key: 'trendPct', label: 'Trend', help: 'Change in yearly-median PSF over the window' },
+		{
+			key: 'repeatAnnReturn',
+			label: 'Return p.a.',
+			help: 'Median annualised return on approximate repeat sales (same size + floor band)'
+		},
 		{ key: 'medianPrice', label: 'Median price' },
 		{ key: 'medianAreaSqft', label: 'Median size' },
-		{ key: 'recent12', label: 'Sold (12m)', help: 'Transactions in the last 12 months' },
+		{ key: 'txnsPerYear', label: 'Sold/yr', help: 'Average transactions per year (liquidity)' },
 		{ key: 'nAll', label: 'Total txns' }
 	];
 </script>
@@ -272,16 +348,26 @@
 				<input type="number" min="0" bind:value={minVolume} class="w-28 rounded-lg border border-ghost-200/70 bg-white px-3 py-2 text-sm dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100" />
 			</label>
 		</div>
-		<p class="mt-3 text-xs text-ghost-500">
-			Showing {Math.min(visible.length, kpi.count)} of {kpi.count.toLocaleString()} projects
-			{#if kpi.count > ROW_CAP}· refine filters or search to narrow{/if}
-		</p>
+		<div class="mt-3 flex flex-wrap items-center justify-between gap-2">
+			<p class="text-xs text-ghost-500">
+				Showing {Math.min(visible.length, kpi.count)} of {kpi.count.toLocaleString()} projects
+				{#if kpi.count > ROW_CAP}· refine filters or search to narrow{/if}
+			</p>
+			<button
+				type="button"
+				onclick={copyLink}
+				class="rounded-lg border border-ghost-200/70 px-3 py-1.5 text-xs text-ghost-600 transition hover:border-neon-cyan/50 hover:text-ink-900 dark:border-ink-600/70 dark:text-ghost-300 dark:hover:text-white"
+				title="Copy a link to this exact view (filters + selection)"
+			>
+				{copied ? '✓ Link copied' : '🔗 Copy share link'}
+			</button>
+		</div>
 	</section>
 
-	<!-- Table -->
-	<section class="overflow-x-auto rounded-2xl border border-ghost-200/60 bg-white/85 dark:border-ink-600/60 dark:bg-ink-900/60">
+	<!-- Table (fixed-height, internal scroll, sticky header) -->
+	<section class="max-h-[58vh] overflow-auto rounded-2xl border border-ghost-200/60 bg-white/85 dark:border-ink-600/60 dark:bg-ink-900/60">
 		<table class="w-full text-sm">
-			<thead class="border-b border-ghost-200/60 text-left text-xs uppercase tracking-wide text-ghost-500 dark:border-ink-600/60">
+			<thead class="sticky top-0 z-10 border-b border-ghost-200/60 bg-white/95 text-left text-xs uppercase tracking-wide text-ghost-500 backdrop-blur dark:border-ink-600/60 dark:bg-ink-900/95">
 				<tr>
 					<th class="px-3 py-3 font-medium">Compare</th>
 					{#each cols as c}
@@ -322,7 +408,7 @@
 						<td class="px-3 py-2.5 font-medium text-ink-900 dark:text-ghost-100">{fmtPsf(e.medianPsf)}</td>
 						<td class="px-3 py-2.5">
 							<div class="flex items-center gap-2">
-								<svg viewBox="0 0 80 24" class="h-6 w-20 shrink-0" preserveAspectRatio="none" aria-hidden="true">
+								<svg viewBox="0 0 80 24" class="h-6 w-16 shrink-0" preserveAspectRatio="none" aria-hidden="true">
 									<path
 										d={sparklinePath(e.yearly.map((y) => y[1]))}
 										fill="none"
@@ -334,14 +420,15 @@
 								<span class="font-medium {trendColor(e.trendPct)}">{fmtTrend(e.trendPct)}</span>
 							</div>
 						</td>
+						<td class="px-3 py-2.5 font-medium {trendColor(e.repeatAnnReturn)}" title={e.repeatPairs ? `${e.repeatPairs} repeat pairs` : 'no repeat sales found'}>{fmtTrend(e.repeatAnnReturn)}</td>
 						<td class="px-3 py-2.5 text-ink-700 dark:text-ghost-200">{fmtPrice(e.medianPrice)}</td>
 						<td class="px-3 py-2.5 text-ghost-600 dark:text-ghost-300">{e.medianAreaSqft.toLocaleString()}</td>
-						<td class="px-3 py-2.5 text-ghost-600 dark:text-ghost-300">{e.recent12}</td>
+						<td class="px-3 py-2.5 text-ghost-600 dark:text-ghost-300">{e.txnsPerYear}</td>
 						<td class="px-3 py-2.5 text-ghost-500">{e.nAll.toLocaleString()}</td>
 					</tr>
 				{/each}
 				{#if visible.length === 0}
-					<tr><td colspan="8" class="px-3 py-8 text-center text-sm text-ghost-500">No projects match these filters.</td></tr>
+					<tr><td colspan="9" class="px-3 py-8 text-center text-sm text-ghost-500">No projects match these filters.</td></tr>
 				{/if}
 			</tbody>
 		</table>
@@ -406,10 +493,8 @@
 							<dl class="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
 								<div><dt class="text-xs text-ghost-500">Median PSF</dt><dd class="font-semibold text-ink-900 dark:text-white">{fmtPsf(v.stats.medianPsf)}</dd></div>
 								<div><dt class="text-xs text-ghost-500">Median price</dt><dd class="font-semibold text-ink-900 dark:text-white">{fmtPriceFull(v.stats.medianPrice)}</dd></div>
-								<div><dt class="text-xs text-ghost-500">PSF range</dt><dd class="text-ink-700 dark:text-ghost-200">{fmtPsf(v.stats.minPsf)}–{fmtPsf(v.stats.maxPsf)}</dd></div>
-								<div><dt class="text-xs text-ghost-500">Median size</dt><dd class="text-ink-700 dark:text-ghost-200">{fmtArea(v.stats.medianAreaSqft)}</dd></div>
-								<div><dt class="text-xs text-ghost-500">Txns</dt><dd class="text-ink-700 dark:text-ghost-200">{v.stats.count}</dd></div>
-								<div><dt class="text-xs text-ghost-500">Trend</dt><dd class="font-medium {trendColor(v.entry.trendPct)}">{fmtTrend(v.entry.trendPct)}</dd></div>
+								<div><dt class="text-xs text-ghost-500">Trend (5yr)</dt><dd class="font-medium {trendColor(v.entry.trendPct)}">{fmtTrend(v.entry.trendPct)}</dd></div>
+								<div><dt class="text-xs text-ghost-500">Return p.a.</dt><dd class="font-medium {trendColor(v.entry.repeatAnnReturn)}">{fmtTrend(v.entry.repeatAnnReturn)}</dd></div>
 							</dl>
 						{:else}
 							<p class="mt-3 text-sm text-ghost-500">No transactions match the chart filters.</p>
@@ -418,20 +503,89 @@
 				{/each}
 			</div>
 
-			<!-- Charts -->
-			<div class="grid gap-4 lg:grid-cols-2">
-				<div class="rounded-2xl border border-ghost-200/60 bg-white/85 p-4 dark:border-ink-600/60 dark:bg-ink-900/60">
-					<h3 class="mb-3 text-sm font-medium text-ink-900 dark:text-white">Median PSF over time</h3>
-					{#if lineSeries.length}<LineChart series={lineSeries} />{:else}<p class="text-sm text-ghost-500">No data for the current filters.</p>{/if}
-				</div>
-				<div class="rounded-2xl border border-ghost-200/60 bg-white/85 p-4 dark:border-ink-600/60 dark:bg-ink-900/60">
-					<h3 class="mb-3 text-sm font-medium text-ink-900 dark:text-white">PSF vs size</h3>
-					{#if scatter.length}<Scatter series={scatter} />{:else}<p class="text-sm text-ghost-500">No data for the current filters.</p>{/if}
-				</div>
-			</div>
+			<!-- Charts (tabbed to keep the page compact) -->
 			<div class="rounded-2xl border border-ghost-200/60 bg-white/85 p-4 dark:border-ink-600/60 dark:bg-ink-900/60">
-				<h3 class="mb-3 text-sm font-medium text-ink-900 dark:text-white">PSF distribution</h3>
-				{#if dists.length}<Histogram {dists} />{:else}<p class="text-sm text-ghost-500">No data for the current filters.</p>{/if}
+				<div class="mb-4 inline-flex flex-wrap rounded-full border border-ghost-200/70 bg-ghost-50 p-1 text-xs dark:border-ink-600/60 dark:bg-ink-950/60">
+					{#each COMPARE_TABS as t}
+						<button
+							type="button"
+							onclick={() => (compareTab = t.id)}
+							class="rounded-full px-3 py-1.5 transition {compareTab === t.id ? 'bg-ink-900 text-neon-cyan dark:bg-ink-700' : 'text-ghost-500 hover:text-ink-900 dark:hover:text-white'}"
+						>{t.label}</button>
+					{/each}
+				</div>
+
+				{#if compareTab === 'trend'}
+					{#if lineSeries.length}<LineChart series={lineSeries} />{:else}<p class="text-sm text-ghost-500">No data for the current filters.</p>{/if}
+				{:else if compareTab === 'scatter'}
+					{#if scatter.length}<Scatter series={scatter} />{:else}<p class="text-sm text-ghost-500">No data for the current filters.</p>{/if}
+				{:else if compareTab === 'dist'}
+					{#if dists.length}<Histogram {dists} />{:else}<p class="text-sm text-ghost-500">No data for the current filters.</p>{/if}
+				{:else}
+					<!-- Deep dive: floor & size premium, repeat-sale returns, uplift -->
+					<div class="grid gap-4 md:grid-cols-2">
+						{#each views as v}
+							<div class="rounded-xl border border-ghost-200/60 p-4 dark:border-ink-600/50" style="box-shadow: inset 0 0 0 1px {v.color}22">
+								<div class="flex items-center gap-2">
+									<span class="h-2.5 w-2.5 rounded-full" style="background:{v.color}"></span>
+									<h4 class="truncate text-sm font-semibold text-ink-900 dark:text-white">{v.entry.project}</h4>
+								</div>
+
+								<div class="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
+									<div class="rounded-lg bg-ghost-50 p-2 dark:bg-ink-950/60">
+										<div class="text-ghost-500">Return p.a.</div>
+										<div class="mt-0.5 font-semibold {trendColor(v.shard.repeatStats.medianAnnReturnPct)}">{fmtTrend(v.shard.repeatStats.medianAnnReturnPct)}</div>
+										<div class="text-[10px] text-ghost-500">{v.shard.repeatStats.pairs} pairs</div>
+									</div>
+									<div class="rounded-lg bg-ghost-50 p-2 dark:bg-ink-950/60">
+										<div class="text-ghost-500">New→resale</div>
+										<div class="mt-0.5 font-semibold {trendColor(v.shard.uplift.upliftPct)}">{fmtTrend(v.shard.uplift.upliftPct)}</div>
+										<div class="text-[10px] text-ghost-500">{v.shard.uplift.newCount} new sales</div>
+									</div>
+									<div class="rounded-lg bg-ghost-50 p-2 dark:bg-ink-950/60">
+										<div class="text-ghost-500">Velocity</div>
+										<div class="mt-0.5 font-semibold text-ink-900 dark:text-white">{v.entry.txnsPerYear}/yr</div>
+										<div class="text-[10px] text-ghost-500">{v.shard.repeatStats.medianHoldYears ?? '—'}y hold</div>
+									</div>
+								</div>
+
+								<!-- Floor premium -->
+								{#if v.shard.byFloor.length > 1}
+									<p class="mt-3 text-xs font-medium text-ghost-500">PSF by floor band</p>
+									<div class="mt-1 space-y-1">
+										{#each v.shard.byFloor as f}
+											<div class="flex items-center gap-2 text-xs">
+												<span class="w-14 shrink-0 text-ghost-500">{f.floorRange}</span>
+												<div class="h-3 flex-1 overflow-hidden rounded bg-ghost-100 dark:bg-ink-800">
+													<div class="h-full rounded" style="width:{Math.min(100, (f.medianPsf / Math.max(...v.shard.byFloor.map((x) => x.medianPsf))) * 100)}%; background:{v.color}"></div>
+												</div>
+												<span class="w-16 shrink-0 text-right text-ink-700 dark:text-ghost-200">{fmtPsf(f.medianPsf)}</span>
+												<span class="w-12 shrink-0 text-right {trendColor(f.premiumPct)}">{fmtTrend(f.premiumPct)}</span>
+											</div>
+										{/each}
+									</div>
+								{/if}
+
+								<!-- Size premium -->
+								{#if v.shard.bySize.length > 1}
+									<p class="mt-3 text-xs font-medium text-ghost-500">PSF by size</p>
+									<div class="mt-1 space-y-1">
+										{#each v.shard.bySize as s}
+											<div class="flex items-center gap-2 text-xs">
+												<span class="w-20 shrink-0 text-ghost-500">{s.bucket}</span>
+												<div class="h-3 flex-1 overflow-hidden rounded bg-ghost-100 dark:bg-ink-800">
+													<div class="h-full rounded" style="width:{Math.min(100, (s.medianPsf / Math.max(...v.shard.bySize.map((x) => x.medianPsf))) * 100)}%; background:{v.color}"></div>
+												</div>
+												<span class="w-16 shrink-0 text-right text-ink-700 dark:text-ghost-200">{fmtPsf(s.medianPsf)}</span>
+												<span class="w-12 shrink-0 text-right {trendColor(s.premiumPct)}">{fmtTrend(s.premiumPct)}</span>
+											</div>
+										{/each}
+									</div>
+								{/if}
+							</div>
+						{/each}
+					</div>
+				{/if}
 			</div>
 		{/if}
 	</section>

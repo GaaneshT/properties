@@ -21,13 +21,24 @@
 	>
 		<div class="grid gap-6 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] md:items-center">
 			<div>
-				<p class="font-mono text-xs uppercase tracking-[0.25em] text-neon-cyan">// data &amp; credits</p>
+				<p class="text-xs font-semibold uppercase tracking-[0.15em] text-neon-cyan">Data &amp; methodology</p>
 				<p class="mt-3 max-w-xl text-pretty text-sm text-ink-700 dark:text-ghost-300">
 					Data: URA, via the URA Data Service. Personal project — not affiliated with or endorsed by
 					URA. Caveat data covers ~80–90% of resale/sub-sale volume; figures are derived (computed
-					PSF, medians, distributions) over a 60-month rolling window, not a republished caveat
-					table. Provided “as is”, no warranty.
+					PSF, medians, distributions, approximate returns) over a 60-month rolling window, not a
+					republished caveat table. Provided “as is”, no warranty.
 				</p>
+				<details class="mt-3 max-w-xl text-sm text-ink-600 dark:text-ghost-300">
+					<summary class="cursor-pointer text-neon-cyan hover:underline">How the analytics are computed</summary>
+					<ul class="mt-2 list-disc space-y-1 pl-5 text-[13px] text-ink-600 dark:text-ghost-300">
+						<li><strong>Median PSF / trend:</strong> price ÷ (area × 10.7639), median by quarter/year; trend is the change in yearly-median PSF over the window (years with ≥3 sales).</li>
+						<li><strong>Repeat-sale returns (approximate):</strong> the feed has <em>no unit number</em>, so “same unit” is proxied by identical floor area + floor band within a project, then sales paired chronologically. A documented approximation — pair counts are shown for context.</li>
+						<li><strong>New→resale uplift:</strong> launch-vintage new-sale median PSF vs recent (≤24-month) resale median PSF.</li>
+						<li><strong>Floor / size premium:</strong> median PSF per floor band and size bucket vs the project median.</li>
+						<li><strong>Velocity:</strong> average transactions per year over the window.</li>
+						<li>Figures default to <strong>resale</strong> (mixing in new launches distorts trends).</li>
+					</ul>
+				</details>
 				<p class="mt-2 max-w-xl text-pretty text-[11px] leading-relaxed text-ghost-500 dark:text-ghost-400">
 					Contains information from the URA Private Residential Property Transactions dataset
 					accessed via the URA Data Service, made available under the terms of the
