@@ -1,37 +1,64 @@
-// Single source of truth for the viewer. The JSON is produced server-side by
-// scripts/pull_ura.py and committed to data/. We import it at build time, so the
-// front end never touches the URA API (and there's no AccessKey anywhere near
-// the browser). Re-baking + redeploying is what refreshes the site.
-import transactionsData from '../../data/transactions.json';
-import metaData from '../../data/meta.json';
+// Runtime data access. The committed JSON lives under static/data and is served
+// at /data/... by GitHub Pages. We fetch the lightweight index up front and pull
+// per-district transaction shards on demand (lazily, cached). The browser never
+// calls the URA API — only these pre-baked, derived files.
+import { base } from '$app/paths';
 
+// ── Shapes (mirror scripts/pull_ura.py output) ──────────────────────────────
 export type SaleCode = '1' | '2' | '3';
+export type Category = 'condo' | 'ec' | 'landed' | 'other';
+export type Region = 'CCR' | 'RCR' | 'OCR' | '';
+export type TenureClass = 'freehold' | 'leasehold' | 'unknown';
 
-export type Transaction = {
-	date: string; // 'YYYY-MM'
-	year: number;
-	quarter: string; // 'YYYY-Qn'
+export type IndexEntry = {
+	project: string;
+	street: string;
+	district: string;
+	region: Region;
+	propertyTypes: string[];
+	category: Category;
+	tenureClass: TenureClass;
+	tenure: string;
+	x: string;
+	y: string;
+	basis: 'resale' | 'all';
+	n: number;
+	nAll: number;
+	recent12: number;
+	medianPsf: number;
+	minPsf: number;
+	maxPsf: number;
+	medianPrice: number;
+	minPrice: number;
+	maxPrice: number;
+	medianAreaSqft: number;
+	minAreaSqft: number;
+	maxAreaSqft: number;
+	trendPct: number | null;
+	firstYear: number;
+	lastYear: number;
+	yearly: [number, number, number][]; // [year, medianPsf, count]
+};
+
+export type ShardTxn = {
+	date: string;
+	quarter: string;
 	psf: number;
 	price: number;
 	areaSqft: number;
-	areaSqm: number;
 	floorRange: string;
-	typeOfSale: string; // SaleCode as string
-	saleType: string; // human label
+	typeOfSale: string;
+	tenureClass: TenureClass;
 	propertyType: string;
-	tenure: string;
-	tenureClass: 'freehold' | 'leasehold' | 'unknown';
-	noOfUnits: number;
 };
 
-export type Project = {
+export type ShardProject = {
 	project: string;
 	street: string;
-	marketSegment: string;
 	district: string;
-	x: string;
-	y: string;
-	transactions: Transaction[];
+	region: Region;
+	tenureClass: TenureClass;
+	transactions: ShardTxn[];
 	summary: Record<string, unknown>;
 };
 
@@ -39,25 +66,77 @@ export type Meta = {
 	refreshedAt: string;
 	source: string;
 	service: string;
-	watchlist: string[];
 	projectCount: number;
 	transactionCount: number;
+	districtCount: number;
 	note: string;
 	mock?: boolean;
 };
 
-export const projects: Project[] = (transactionsData as { projects: Project[] }).projects;
-export const meta: Meta = metaData as Meta;
+// ── Fetching (cached) ────────────────────────────────────────────────────────
+export const districtKey = (district: string) => (district ? `D${district}` : 'DNA');
 
-// Verified against a live URA response (2026-06): 1=new sale, 2=sub-sale,
-// 3=resale. (2 and 3 are swapped vs the order one might assume.)
+let _index: Promise<IndexEntry[]> | null = null;
+export function loadIndex(): Promise<IndexEntry[]> {
+	return (_index ??= fetch(`${base}/data/index.json`).then((r) => {
+		if (!r.ok) throw new Error(`index.json: ${r.status}`);
+		return r.json();
+	}));
+}
+
+let _meta: Promise<Meta> | null = null;
+export function loadMeta(): Promise<Meta> {
+	return (_meta ??= fetch(`${base}/data/meta.json`).then((r) => r.json()));
+}
+
+const _shards = new Map<string, Promise<ShardProject[]>>();
+export function loadDistrict(dkey: string): Promise<ShardProject[]> {
+	let p = _shards.get(dkey);
+	if (!p) {
+		p = fetch(`${base}/data/districts/${dkey}.json`).then((r) => {
+			if (!r.ok) throw new Error(`${dkey}.json: ${r.status}`);
+			return r.json();
+		});
+		_shards.set(dkey, p);
+	}
+	return p;
+}
+
+/** Fetch the ShardProject records for a set of index entries (dedupes shards). */
+export async function loadProjects(entries: IndexEntry[]): Promise<Map<string, ShardProject>> {
+	const dkeys = [...new Set(entries.map((e) => districtKey(e.district)))];
+	const shards = await Promise.all(dkeys.map((k) => loadDistrict(k)));
+	const byName = new Map<string, ShardProject>();
+	for (const shard of shards) for (const p of shard) byName.set(p.project, p);
+	const out = new Map<string, ShardProject>();
+	for (const e of entries) {
+		const p = byName.get(e.project);
+		if (p) out.set(e.project, p);
+	}
+	return out;
+}
+
+// ── Labels (normal property jargon — kept, with a friendly expansion) ────────
 export const SALE_LABELS: Record<SaleCode, string> = {
-	'1': 'new sale',
-	'2': 'sub-sale',
-	'3': 'resale'
+	'1': 'New sale',
+	'2': 'Sub-sale',
+	'3': 'Resale'
 };
 
-// ── Color assignment for multi-project overlay ──────────────────────────────
+export const REGION_LABELS: Record<string, string> = {
+	CCR: 'Core Central Region',
+	RCR: 'Rest of Central Region',
+	OCR: 'Outside Central Region'
+};
+
+export const CATEGORY_LABELS: Record<Category, string> = {
+	condo: 'Condo / Apartment',
+	ec: 'Executive Condo',
+	landed: 'Landed',
+	other: 'Other'
+};
+
+// ── Comparison palette ───────────────────────────────────────────────────────
 export const SERIES_COLORS = [
 	'var(--color-neon-cyan)',
 	'var(--color-neon-violet)',
@@ -66,16 +145,13 @@ export const SERIES_COLORS = [
 	'var(--color-neon-green)',
 	'var(--color-neon-teal)'
 ];
+export const colorFor = (i: number) => SERIES_COLORS[i % SERIES_COLORS.length];
+export const MAX_COMPARE = 6;
 
-export const colorFor = (index: number) => SERIES_COLORS[index % SERIES_COLORS.length];
+// ── Filtering at the transaction level (for the comparison charts) ───────────
+export type Filters = { sales: Set<SaleCode>; tenure: 'all' | 'freehold' | 'leasehold' };
 
-// ── Filtering ───────────────────────────────────────────────────────────────
-export type Filters = {
-	sales: Set<SaleCode>; // which typeOfSale codes to include
-	tenure: 'all' | 'freehold' | 'leasehold';
-};
-
-export function filterTxns(txns: Transaction[], f: Filters): Transaction[] {
+export function filterTxns(txns: ShardTxn[], f: Filters): ShardTxn[] {
 	return txns.filter((t) => {
 		if (!f.sales.has(t.typeOfSale as SaleCode)) return false;
 		if (f.tenure !== 'all' && t.tenureClass !== f.tenure) return false;
@@ -83,7 +159,7 @@ export function filterTxns(txns: Transaction[], f: Filters): Transaction[] {
 	});
 }
 
-// ── Aggregation (recomputed for the active filter) ──────────────────────────
+// ── Aggregation ──────────────────────────────────────────────────────────────
 function median(values: number[]): number {
 	if (values.length === 0) return NaN;
 	const s = [...values].sort((a, b) => a - b);
@@ -92,12 +168,17 @@ function median(values: number[]): number {
 }
 
 export type QuarterPoint = { quarter: string; medianPsf: number; count: number };
-
-// Chart input shapes (shared by the page and the chart components).
 export type Series = { label: string; color: string; points: QuarterPoint[] };
 export type Dist = { label: string; color: string; values: number[] };
+export type ScatterPoint = { x: number; y: number };
+export type ScatterSeries = { label: string; color: string; points: ScatterPoint[] };
 
-export function medianPsfByQuarter(txns: Transaction[]): QuarterPoint[] {
+export function quarterToNum(q: string): number {
+	const [y, qq] = q.split('-Q');
+	return Number(y) * 4 + (Number(qq) - 1);
+}
+
+export function medianPsfByQuarter(txns: ShardTxn[]): QuarterPoint[] {
 	const byQ = new Map<string, number[]>();
 	for (const t of txns) {
 		const arr = byQ.get(t.quarter) ?? [];
@@ -113,12 +194,6 @@ export function medianPsfByQuarter(txns: Transaction[]): QuarterPoint[] {
 		.sort((a, b) => quarterToNum(a.quarter) - quarterToNum(b.quarter));
 }
 
-export function quarterToNum(q: string): number {
-	// '2023-Q2' -> 2023*4 + 1
-	const [y, qq] = q.split('-Q');
-	return Number(y) * 4 + (Number(qq) - 1);
-}
-
 export type Stats = {
 	count: number;
 	medianPsf: number;
@@ -127,12 +202,14 @@ export type Stats = {
 	medianPrice: number;
 	minPrice: number;
 	maxPrice: number;
+	medianAreaSqft: number;
 };
 
-export function statsFor(txns: Transaction[]): Stats | null {
+export function statsFor(txns: ShardTxn[]): Stats | null {
 	if (txns.length === 0) return null;
 	const psfs = txns.map((t) => t.psf);
 	const prices = txns.map((t) => t.price);
+	const areas = txns.map((t) => t.areaSqft);
 	return {
 		count: txns.length,
 		medianPsf: Math.round(median(psfs) * 100) / 100,
@@ -140,29 +217,7 @@ export function statsFor(txns: Transaction[]): Stats | null {
 		maxPsf: Math.max(...psfs),
 		medianPrice: Math.round(median(prices)),
 		minPrice: Math.min(...prices),
-		maxPrice: Math.max(...prices)
+		maxPrice: Math.max(...prices),
+		medianAreaSqft: Math.round(median(areas))
 	};
-}
-
-// Histogram bins for the PSF distribution view.
-export function histogram(
-	values: number[],
-	binCount = 12
-): { x0: number; x1: number; n: number }[] {
-	if (values.length === 0) return [];
-	const min = Math.min(...values);
-	const max = Math.max(...values);
-	if (min === max) return [{ x0: min, x1: max, n: values.length }];
-	const width = (max - min) / binCount;
-	const bins = Array.from({ length: binCount }, (_, i) => ({
-		x0: min + i * width,
-		x1: min + (i + 1) * width,
-		n: 0
-	}));
-	for (const v of values) {
-		let idx = Math.floor((v - min) / width);
-		if (idx >= binCount) idx = binCount - 1;
-		bins[idx].n++;
-	}
-	return bins;
 }

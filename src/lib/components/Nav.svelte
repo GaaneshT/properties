@@ -42,14 +42,13 @@
 	<div class="flex items-center justify-between gap-3">
 		<a
 			href="/"
-			class="group flex items-center gap-2 font-mono text-xs font-semibold tracking-wider text-ghost-500 transition-colors hover:text-ink-900 dark:hover:text-white"
+			class="group flex items-center gap-2 text-sm font-semibold text-ink-800 transition-colors hover:text-ink-900 dark:text-ghost-200 dark:hover:text-white"
 		>
 			<span
 				class="inline-flex h-6 w-6 items-center justify-center rounded-md bg-ink-900 font-bold leading-none text-neon-cyan ring-1 ring-neon-cyan/30 dark:bg-ink-700"
-				>~</span
+				>◧</span
 			>
-			<span class="hidden sm:inline">{identity.handle}@{identity.host}</span>
-			<span class="hidden text-neon-cyan sm:inline" style="animation: var(--animate-blink);">▌</span>
+			<span class="hidden sm:inline">{identity.host}.gaanesh.com</span>
 		</a>
 
 		<div class="hidden items-center gap-1 md:flex">

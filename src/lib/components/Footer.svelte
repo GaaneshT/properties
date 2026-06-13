@@ -1,8 +1,18 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { identity, externalLinks } from '$lib/identity';
-	import { meta } from '$lib/data';
+	import { loadMeta, type Meta } from '$lib/data';
 	import { fmtDate } from '$lib/format';
 	const year = new Date().getFullYear();
+
+	let meta = $state<Meta | null>(null);
+	onMount(async () => {
+		try {
+			meta = await loadMeta();
+		} catch {
+			/* footer meta is non-critical */
+		}
+	});
 </script>
 
 <footer class="mx-auto mt-16 w-full max-w-6xl px-6 pb-16">
@@ -43,18 +53,12 @@
 			<div
 				class="rounded-xl border border-ghost-200/60 bg-ghost-50/80 p-4 font-mono text-[11px] text-ghost-500 dark:border-ink-600/60 dark:bg-ink-950/70 dark:text-ghost-400"
 			>
-				<p>
-					<span class="text-neon-green">{identity.handle}</span><span class="text-ghost-400">@</span
-					><span class="text-neon-violet">{identity.host}</span><span class="text-ghost-400">:~$</span
-					>
-					<span class="text-ink-900 dark:text-ghost-100">stat data/</span>
-				</p>
-				<p class="mt-1">refreshed: {fmtDate(meta.refreshedAt)}</p>
-				<p>projects: {meta.projectCount} · txns: {meta.transactionCount}</p>
-				{#if meta.mock}
-					<p class="mt-1 text-neon-amber">⚠ showing MOCK sample data</p>
+				{#if meta}
+					<p>Last refreshed: {fmtDate(meta.refreshedAt)}</p>
+					<p>{meta.projectCount.toLocaleString()} projects · {meta.transactionCount.toLocaleString()} transactions</p>
+					{#if meta.mock}<p class="mt-1 text-neon-amber">⚠ showing sample data</p>{/if}
 				{/if}
-				<p class="mt-2">© {year} {identity.name} <span class="text-neon-cyan">▌</span></p>
+				<p class="mt-2">© {year} {identity.name}</p>
 			</div>
 		</div>
 	</div>
