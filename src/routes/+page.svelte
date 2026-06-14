@@ -260,13 +260,20 @@
 	}
 	const chartFilters = $derived<Filters>({ sales, tenure: chartTenure });
 
-	let compareTab = $state<'trend' | 'scatter' | 'dist' | 'detail'>('trend');
+	let compareTab = $state<'trend' | 'scatter' | 'dist' | 'detail' | 'txns'>('trend');
 	const COMPARE_TABS = [
 		{ id: 'trend', label: 'PSF over time' },
 		{ id: 'scatter', label: 'PSF vs size' },
 		{ id: 'dist', label: 'Distribution' },
-		{ id: 'detail', label: 'Deep dive' }
+		{ id: 'detail', label: 'Deep dive' },
+		{ id: 'txns', label: 'All transactions' }
 	] as const;
+
+	const monthsAbbr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	const fmtMonth = (d: string) => {
+		const [y, m] = d.split('-');
+		return `${monthsAbbr[Number(m) - 1] ?? m} ${y}`;
+	};
 
 	const views = $derived.by(() => {
 		return selectedEntries
@@ -635,6 +642,53 @@
 					{#if scatter.length}<Scatter series={scatter} />{:else}<p class="text-sm text-ghost-500">No data for the current filters.</p>{/if}
 				{:else if compareTab === 'dist'}
 					{#if dists.length}<Histogram {dists} />{:else}<p class="text-sm text-ghost-500">No data for the current filters.</p>{/if}
+				{:else if compareTab === 'txns'}
+					<!-- Full per-project transaction history (from the district shard) -->
+					<p class="mb-3 text-xs text-ghost-500">
+						Every matching transaction over the 60-month window (newest first), honouring the sale-type
+						and tenure filters above. Caveats are month-dated.
+					</p>
+					<div class="grid gap-4 {views.length > 1 ? 'md:grid-cols-2' : ''}">
+						{#each views as v}
+							<div class="rounded-xl border border-ghost-200/60 dark:border-ink-600/50" style="box-shadow: inset 0 0 0 1px {v.color}22">
+								<div class="flex items-center gap-2 border-b border-ghost-200/60 px-3 py-2 dark:border-ink-600/50">
+									<span class="h-2.5 w-2.5 rounded-full" style="background:{v.color}"></span>
+									<h4 class="truncate text-sm font-semibold text-ink-900 dark:text-white">{v.entry.project}</h4>
+									<span class="ml-auto text-xs text-ghost-500">{v.txns.length} txns</span>
+								</div>
+								{#if v.txns.length}
+									<div class="max-h-[50vh] overflow-auto">
+										<table class="w-full text-xs">
+											<thead class="sticky top-0 bg-white/95 text-left text-[10px] uppercase tracking-wide text-ghost-500 dark:bg-ink-900/95">
+												<tr>
+													<th class="px-3 py-2 font-medium">Month</th>
+													<th class="px-3 py-2 font-medium">Price</th>
+													<th class="px-3 py-2 font-medium">PSF</th>
+													<th class="px-3 py-2 font-medium">Size</th>
+													<th class="px-3 py-2 font-medium">Floor</th>
+													<th class="px-3 py-2 font-medium">Sale</th>
+												</tr>
+											</thead>
+											<tbody>
+												{#each [...v.txns].reverse() as t, i (i)}
+													<tr class="border-t border-ghost-200/40 dark:border-ink-600/30">
+														<td class="whitespace-nowrap px-3 py-1.5 text-ghost-500">{fmtMonth(t.date)}</td>
+														<td class="whitespace-nowrap px-3 py-1.5 font-medium text-ink-900 dark:text-ghost-100">{fmtPriceFull(t.price)}</td>
+														<td class="whitespace-nowrap px-3 py-1.5 text-ink-700 dark:text-ghost-200">{fmtPsf(t.psf)}</td>
+														<td class="whitespace-nowrap px-3 py-1.5 text-ghost-600 dark:text-ghost-300">{t.areaSqft.toLocaleString()} sqft</td>
+														<td class="whitespace-nowrap px-3 py-1.5 text-ghost-600 dark:text-ghost-300">{t.floorRange || '—'}</td>
+														<td class="whitespace-nowrap px-3 py-1.5 text-ghost-600 dark:text-ghost-300">{SALE_LABELS[t.typeOfSale as SaleCode] ?? '—'}</td>
+													</tr>
+												{/each}
+											</tbody>
+										</table>
+									</div>
+								{:else}
+									<p class="px-3 py-4 text-sm text-ghost-500">No transactions match the current filters.</p>
+								{/if}
+							</div>
+						{/each}
+					</div>
 				{:else}
 					<!-- Deep dive: floor & size premium, repeat-sale returns, uplift -->
 					<div class="grid gap-4 md:grid-cols-2">

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
 	import {
 		loadRecent,
 		loadMeta,
@@ -78,6 +79,12 @@
 	<p class="max-w-2xl text-sm text-ink-600 dark:text-ghost-300">
 		The latest private-residential caveats lodged with URA, market-wide. URA dates caveats by month,
 		so these are ordered by most recent month{meta?.recentLatest ? ` (latest: ${fmtMonth(meta.recentLatest)})` : ''}.
+	</p>
+	<p class="max-w-2xl text-xs text-ghost-500">
+		This is a market-wide snapshot of the most recent months only — so searching one project here
+		shows just its latest sales. For a project's <strong>full 60-month transaction history</strong>,
+		open <a href="{base}/" class="text-neon-cyan hover:underline">Analytics</a>, search the project,
+		tick it, and use the “All transactions” tab.
 	</p>
 </section>
 
