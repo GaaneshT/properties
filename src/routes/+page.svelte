@@ -305,8 +305,8 @@
 
 	<!-- Filters -->
 	<section class="rounded-2xl border border-ghost-200/60 bg-white/85 p-4 dark:border-ink-600/60 dark:bg-ink-900/60">
-		<div class="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-end">
-			<label class="flex-1 min-w-[200px]">
+		<div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:flex lg:flex-wrap lg:items-end">
+			<label class="col-span-2 sm:col-span-3 lg:min-w-[220px] lg:flex-1">
 				<span class="mb-1 block text-xs font-medium text-ghost-500">Search project or street</span>
 				<input
 					type="search"
@@ -318,7 +318,7 @@
 
 			<label>
 				<span class="mb-1 block text-xs font-medium text-ghost-500">Type</span>
-				<select bind:value={category} class="rounded-lg border border-ghost-200/70 bg-white px-3 py-2 text-sm dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100">
+				<select bind:value={category} class="w-full rounded-lg border border-ghost-200/70 bg-white px-3 py-2 text-sm lg:w-auto dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100">
 					<option value="condo">Condo / Apartment</option>
 					<option value="ec">Executive Condo</option>
 					<option value="landed">Landed</option>
@@ -328,7 +328,7 @@
 
 			<label>
 				<span class="mb-1 block text-xs font-medium text-ghost-500">Region</span>
-				<select bind:value={region} class="rounded-lg border border-ghost-200/70 bg-white px-3 py-2 text-sm dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100">
+				<select bind:value={region} class="w-full rounded-lg border border-ghost-200/70 bg-white px-3 py-2 text-sm lg:w-auto dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100">
 					<option value="all">All regions</option>
 					<option value="CCR">CCR · Core Central</option>
 					<option value="RCR">RCR · Rest of Central</option>
@@ -338,7 +338,7 @@
 
 			<label>
 				<span class="mb-1 block text-xs font-medium text-ghost-500">Tenure</span>
-				<select bind:value={tenure} class="rounded-lg border border-ghost-200/70 bg-white px-3 py-2 text-sm dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100">
+				<select bind:value={tenure} class="w-full rounded-lg border border-ghost-200/70 bg-white px-3 py-2 text-sm lg:w-auto dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100">
 					<option value="all">All tenures</option>
 					<option value="freehold">Freehold</option>
 					<option value="leasehold">Leasehold</option>
@@ -347,7 +347,7 @@
 
 			<label>
 				<span class="mb-1 block text-xs font-medium text-ghost-500">Min. total txns</span>
-				<input type="number" min="0" bind:value={minVolume} class="w-28 rounded-lg border border-ghost-200/70 bg-white px-3 py-2 text-sm dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100" />
+				<input type="number" min="0" bind:value={minVolume} class="w-full rounded-lg border border-ghost-200/70 bg-white px-3 py-2 text-sm lg:w-28 dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100" />
 			</label>
 		</div>
 		<div class="mt-3 flex flex-wrap items-center justify-between gap-2">
@@ -366,8 +366,60 @@
 		</div>
 	</section>
 
-	<!-- Table (fixed-height, internal scroll, sticky header) -->
-	<section class="max-h-[58vh] overflow-auto rounded-2xl border border-ghost-200/60 bg-white/85 dark:border-ink-600/60 dark:bg-ink-900/60">
+	<!-- Cards (mobile/tablet) -->
+	<section class="space-y-3 lg:hidden">
+		<div class="flex items-center gap-2">
+			<label class="flex flex-1 items-center gap-2 rounded-lg border border-ghost-200/70 bg-white px-3 py-2 dark:border-ink-600/70 dark:bg-ink-950/70">
+				<span class="text-xs text-ghost-500">Sort</span>
+				<select bind:value={sortKey} class="flex-1 bg-transparent text-sm text-ink-900 dark:text-ghost-100">
+					{#each cols.filter((c) => c.key !== 'project') as c}
+						<option value={c.key}>{c.label}</option>
+					{/each}
+				</select>
+			</label>
+			<button
+				type="button"
+				onclick={() => (sortDir = sortDir === 'asc' ? 'desc' : 'asc')}
+				class="rounded-lg border border-ghost-200/70 px-3 py-2 text-sm text-ghost-600 dark:border-ink-600/70 dark:text-ghost-300"
+			>{sortDir === 'asc' ? '▲ Asc' : '▼ Desc'}</button>
+		</div>
+
+		<div class="max-h-[64vh] space-y-2 overflow-auto">
+			{#each visible as e (e.project)}
+				{@const sel = selected.has(e.project)}
+				<button
+					type="button"
+					onclick={() => toggle(e.project)}
+					disabled={!sel && selected.size >= MAX_COMPARE}
+					class="w-full rounded-xl border p-3 text-left transition disabled:opacity-40 {sel
+						? 'border-neon-cyan/60 bg-neon-cyan/5'
+						: 'border-ghost-200/60 bg-white/85 dark:border-ink-600/60 dark:bg-ink-900/60'}"
+				>
+					<div class="flex items-start justify-between gap-2">
+						<div class="min-w-0">
+							<div class="truncate font-medium text-ink-900 dark:text-white">{e.project}</div>
+							<div class="truncate text-xs text-ghost-500">{e.street} · D{e.district} · {e.region} · {e.tenureClass}</div>
+						</div>
+						<span class="shrink-0 rounded-full border px-2 py-0.5 text-[10px] {sel ? 'border-neon-cyan text-neon-cyan' : 'border-ghost-300 text-ghost-500 dark:border-ink-500'}">{sel ? '✓ added' : 'compare'}</span>
+					</div>
+					<div class="mt-2.5 grid grid-cols-3 gap-x-3 gap-y-2 text-xs">
+						<div><div class="text-ghost-500">Median PSF</div><div class="font-semibold text-ink-900 dark:text-ghost-100">{fmtPsf(e.medianPsf)}</div></div>
+						<div><div class="text-ghost-500">Trend</div><div class="font-semibold {trendColor(e.trendPct)}">{fmtTrend(e.trendPct)}</div></div>
+						<div><div class="text-ghost-500">Return p.a.</div><div class="font-semibold {trendColor(e.repeatAnnReturn)}">{fmtTrend(e.repeatAnnReturn)}</div></div>
+						<div><div class="text-ghost-500">Gross yield</div><div class="font-semibold text-ink-900 dark:text-ghost-100">{e.grossYield != null ? `${e.grossYield.toFixed(1)}%` : '—'}</div></div>
+						<div><div class="text-ghost-500">Median price</div><div class="font-semibold text-ink-900 dark:text-ghost-100">{fmtPrice(e.medianPrice)}</div></div>
+						<div><div class="text-ghost-500">Sold/yr</div><div class="font-semibold text-ink-900 dark:text-ghost-100">{e.txnsPerYear}</div></div>
+					</div>
+				</button>
+			{/each}
+			{#if visible.length === 0}
+				<p class="rounded-xl border border-ghost-200/60 p-6 text-center text-sm text-ghost-500 dark:border-ink-600/60">No projects match these filters.</p>
+			{/if}
+		</div>
+	</section>
+
+	<!-- Table (desktop): fixed-height, internal scroll, sticky header -->
+	<section class="hidden max-h-[58vh] overflow-auto rounded-2xl border border-ghost-200/60 bg-white/85 lg:block dark:border-ink-600/60 dark:bg-ink-900/60">
 		<table class="w-full text-sm">
 			<thead class="sticky top-0 z-10 border-b border-ghost-200/60 bg-white/95 text-left text-xs uppercase tracking-wide text-ghost-500 backdrop-blur dark:border-ink-600/60 dark:bg-ink-900/95">
 				<tr>

@@ -41,7 +41,7 @@
 			x={PAD.left - 8}
 			y={sy(t) + 3}
 			text-anchor="end"
-			font-size="10"
+			font-size="12"
 			fill="var(--color-ghost-400)">{fmtPsf(t)}</text
 		>
 	{/each}
@@ -50,7 +50,7 @@
 			x={sx(t)}
 			y={H - 22}
 			text-anchor="middle"
-			font-size="10"
+			font-size="12"
 			fill="var(--color-ghost-400)">{Math.round(t).toLocaleString()}</text
 		>
 	{/each}
@@ -58,7 +58,7 @@
 		x={(PAD.left + W - PAD.right) / 2}
 		y={H - 6}
 		text-anchor="middle"
-		font-size="10"
+		font-size="12"
 		fill="var(--color-ghost-500)">size (sqft) →</text
 	>
 

@@ -86,7 +86,7 @@
 					y={H - 10}
 					text-anchor="middle"
 					font-family="JetBrains Mono"
-					font-size="10"
+					font-size="12"
 					fill="var(--color-ghost-400)">{fmtPsf(e)}</text
 				>
 			{/if}

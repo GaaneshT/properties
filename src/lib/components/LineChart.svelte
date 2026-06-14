@@ -105,7 +105,7 @@
 				y={sy(t) + 3}
 				text-anchor="end"
 				font-family="JetBrains Mono"
-				font-size="10"
+				font-size="12"
 				fill="var(--color-ghost-400)">{fmtPsf(t)}</text
 			>
 		{/each}
@@ -117,7 +117,7 @@
 				y={H - 12}
 				text-anchor="middle"
 				font-family="JetBrains Mono"
-				font-size="10"
+				font-size="12"
 				fill="var(--color-ghost-400)">{q}</text
 			>
 		{/each}
