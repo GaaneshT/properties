@@ -175,14 +175,61 @@
 	const clearSelection = () => (selected = new Set());
 
 	let copied = $state(false);
-	async function copyLink() {
-		try {
-			await navigator.clipboard.writeText(location.href);
-			copied = true;
-			setTimeout(() => (copied = false), 1500);
-		} catch {
-			/* clipboard blocked */
+	let manualUrl = $state(''); // shown only if every copy path fails (e.g. http context)
+	let canShare = $state(false);
+	onMount(() => {
+		canShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
+	});
+
+	function flashCopied() {
+		copied = true;
+		setTimeout(() => (copied = false), 1500);
+	}
+
+	async function shareLink() {
+		const url = location.href;
+		manualUrl = '';
+		// 1) Native share sheet — best on mobile.
+		if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+			try {
+				await navigator.share({ title: 'SG Property Analytics', url });
+				return;
+			} catch (e) {
+				if (e instanceof DOMException && e.name === 'AbortError') return; // user cancelled
+				// otherwise fall through to copy
+			}
 		}
+		// 2) Async Clipboard API (secure contexts).
+		if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+			try {
+				await navigator.clipboard.writeText(url);
+				flashCopied();
+				return;
+			} catch {
+				/* fall through */
+			}
+		}
+		// 3) Legacy execCommand — works in insecure (http) contexts and old mobile.
+		try {
+			const ta = document.createElement('textarea');
+			ta.value = url;
+			ta.style.position = 'fixed';
+			ta.style.top = '0';
+			ta.style.opacity = '0';
+			document.body.appendChild(ta);
+			ta.focus();
+			ta.select();
+			const ok = document.execCommand('copy');
+			document.body.removeChild(ta);
+			if (ok) {
+				flashCopied();
+				return;
+			}
+		} catch {
+			/* fall through */
+		}
+		// 4) Last resort: reveal the link for manual copy.
+		manualUrl = url;
 	}
 
 	const selectedEntries = $derived(entries.filter((e) => selected.has(e.project)));
@@ -357,13 +404,25 @@
 			</p>
 			<button
 				type="button"
-				onclick={copyLink}
+				onclick={shareLink}
 				class="rounded-lg border border-ghost-200/70 px-3 py-1.5 text-xs text-ghost-600 transition hover:border-neon-cyan/50 hover:text-ink-900 dark:border-ink-600/70 dark:text-ghost-300 dark:hover:text-white"
-				title="Copy a link to this exact view (filters + selection)"
+				title="Share a link to this exact view (filters + selection)"
 			>
-				{copied ? '✓ Link copied' : '🔗 Copy share link'}
+				{copied ? '✓ Link copied' : canShare ? '🔗 Share this view' : '🔗 Copy share link'}
 			</button>
 		</div>
+		{#if manualUrl}
+			<div class="mt-2 flex items-center gap-2">
+				<input
+					readonly
+					value={manualUrl}
+					onfocus={(e) => e.currentTarget.select()}
+					class="w-full rounded-lg border border-ghost-200/70 bg-ghost-50 px-3 py-1.5 text-xs text-ink-900 dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100"
+					aria-label="Shareable link — tap to select and copy"
+				/>
+			</div>
+			<p class="mt-1 text-[11px] text-ghost-500">Tap the link above to select, then copy.</p>
+		{/if}
 	</section>
 
 	<!-- Cards (mobile/tablet) -->
