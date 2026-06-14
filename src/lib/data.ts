@@ -102,6 +102,8 @@ export type Meta = {
 	transactionCount: number;
 	districtCount: number;
 	rentalProjectCount?: number;
+	recentCount?: number;
+	recentLatest?: string | null;
 	note: string;
 	mock?: boolean;
 };
@@ -120,6 +122,30 @@ export function loadIndex(): Promise<IndexEntry[]> {
 let _meta: Promise<Meta> | null = null;
 export function loadMeta(): Promise<Meta> {
 	return (_meta ??= fetch(`${base}/data/meta.json`).then((r) => r.json()));
+}
+
+export type RecentTxn = {
+	date: string; // 'YYYY-MM'
+	project: string;
+	street: string;
+	district: string;
+	region: Region;
+	category: Category;
+	price: number;
+	psf: number;
+	areaSqft: number;
+	floorRange: string;
+	typeOfSale: string;
+	propertyType: string;
+	tenureClass: TenureClass;
+};
+
+let _recent: Promise<RecentTxn[]> | null = null;
+export function loadRecent(): Promise<RecentTxn[]> {
+	return (_recent ??= fetch(`${base}/data/recent.json`).then((r) => {
+		if (!r.ok) throw new Error(`recent.json: ${r.status}`);
+		return r.json();
+	}));
 }
 
 const _shards = new Map<string, Promise<ShardProject[]>>();

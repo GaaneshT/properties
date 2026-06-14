@@ -1,7 +1,19 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
+	import { base } from '$app/paths';
 	import { identity, externalLinks } from '$lib/identity';
 	import Icon from './Icon.svelte';
+
+	const internalLinks = [
+		{ label: 'Analytics', href: `${base}/` },
+		{ label: 'Recent', href: `${base}/recent` }
+	];
+	const isActive = (href: string) => {
+		const path = $page.url.pathname.replace(/\/$/, '') || '/';
+		const target = href.replace(/\/$/, '') || '/';
+		return path === target;
+	};
 
 	let isOpen = $state(false);
 	let theme: 'dark' | 'light' = $state('dark');
@@ -52,10 +64,24 @@
 		</a>
 
 		<div class="hidden items-center gap-1 md:flex">
+			{#each internalLinks as link}
+				<a
+					href={link.href}
+					aria-current={isActive(link.href) ? 'page' : undefined}
+					class="rounded-full px-3 py-1.5 text-xs font-medium transition-colors hover:bg-ghost-100/60 hover:text-ink-900 dark:hover:bg-ink-700/60 dark:hover:text-white {isActive(
+						link.href
+					)
+						? 'bg-ghost-100/70 text-ink-900 dark:bg-ink-700/60 dark:text-white'
+						: 'text-ghost-500'}"
+				>
+					{link.label}
+				</a>
+			{/each}
+			<span class="mx-1 h-4 w-px bg-ghost-200/70 dark:bg-ink-600/70"></span>
 			{#each externalLinks as link}
 				<a
 					href={link.url}
-					class="rounded-full px-3 py-1.5 font-mono text-xs uppercase tracking-[0.18em] text-ghost-500 transition-colors hover:bg-ghost-100/60 hover:text-ink-900 dark:hover:bg-ink-700/60 dark:hover:text-white"
+					class="rounded-full px-3 py-1.5 text-xs text-ghost-500 transition-colors hover:bg-ghost-100/60 hover:text-ink-900 dark:hover:bg-ink-700/60 dark:hover:text-white"
 				>
 					{link.label} ↗
 				</a>
@@ -86,11 +112,26 @@
 
 	{#if isOpen}
 		<div class="mt-3 flex flex-col gap-1 md:hidden">
+			{#each internalLinks as link}
+				<a
+					href={link.href}
+					onclick={() => (isOpen = false)}
+					aria-current={isActive(link.href) ? 'page' : undefined}
+					class="rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-ghost-100/60 hover:text-ink-900 dark:hover:bg-ink-700/60 dark:hover:text-white {isActive(
+						link.href
+					)
+						? 'text-neon-cyan'
+						: 'text-ghost-600 dark:text-ghost-300'}"
+				>
+					{link.label}
+				</a>
+			{/each}
+			<span class="my-1 h-px w-full bg-ghost-200/70 dark:bg-ink-600/70"></span>
 			{#each externalLinks as link}
 				<a
 					href={link.url}
-					class="rounded-lg px-3 py-2 font-mono text-sm text-ghost-500 transition hover:bg-ghost-100/60 hover:text-ink-900 dark:hover:bg-ink-700/60 dark:hover:text-white"
-					>~/<span class="text-neon-cyan">{link.label.toLowerCase()}</span> ↗</a
+					class="rounded-lg px-3 py-2 text-sm text-ghost-500 transition hover:bg-ghost-100/60 hover:text-ink-900 dark:hover:bg-ink-700/60 dark:hover:text-white"
+					>{link.label} ↗</a
 				>
 			{/each}
 		</div>

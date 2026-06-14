@@ -414,13 +414,17 @@ def build_rental(rental_raw: list[dict]) -> dict[str, dict]:
     return out
 
 
+RECENT_LIMIT = 4000  # most-recent transactions market-wide for the /recent feed
+
+
 def build(
     projects_raw: list[dict], ref_month: int, rental_map: dict[str, dict] | None = None
-) -> tuple[list[dict], dict[str, list[dict]]]:
-    """Returns (index_entries, shards_by_district)."""
+) -> tuple[list[dict], dict[str, list[dict]], list[dict]]:
+    """Returns (index_entries, shards_by_district, recent_transactions)."""
     rental_map = rental_map or {}
     wanted = {n.upper() for n in WATCHLIST} if WATCHLIST else None
     by_name: dict[str, dict] = {}
+    recent_pool: list[dict] = []
 
     for proj in projects_raw:
         name = (proj.get("project") or "").strip()
@@ -495,6 +499,26 @@ def build(
         )
         tenure_sample = next((t["tenure"] for t in txns if t["tenure"]), "")
         dkey = f"D{district}" if district else "DNA"
+        cat = categorize(txns)
+
+        # Feed the market-wide "recent transactions" pool.
+        for t in txns:
+            recent_pool.append({
+                "monthIndex": t["monthIndex"],
+                "date": t["date"],
+                "project": name,
+                "street": entry["street"],
+                "district": district,
+                "region": entry["marketSegment"],
+                "category": cat,
+                "price": t["price"],
+                "psf": t["psf"],
+                "areaSqft": t["areaSqft"],
+                "floorRange": t["floorRange"],
+                "typeOfSale": t["typeOfSale"],
+                "propertyType": t["propertyType"],
+                "tenureClass": t["tenureClass"],
+            })
 
         # Lean index — only what the league table + KPIs + sparkline need. Heavier
         # detail (ranges, property types, breakdowns) lives in the district shards.
@@ -504,7 +528,7 @@ def build(
                 "street": entry["street"],
                 "district": district,
                 "region": entry["marketSegment"],
-                "category": categorize(txns),
+                "category": cat,
                 "tenureClass": tclass,
                 "basis": basis,
                 "nAll": len(txns),
@@ -566,7 +590,12 @@ def build(
             }
         )
 
-    return index, shards
+    # Most-recent transactions market-wide (caveats are month-dated, so within a
+    # month order is by price desc as a stable tiebreak). Strip the sort key.
+    recent_pool.sort(key=lambda r: (r["monthIndex"], r["price"]), reverse=True)
+    recent = [{k: v for k, v in r.items() if k != "monthIndex"} for r in recent_pool[:RECENT_LIMIT]]
+
+    return index, shards, recent
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -670,7 +699,7 @@ def main() -> int:
     rental_map = build_rental(rental_raw)
     scope = "all projects" if not WATCHLIST else f"{len(WATCHLIST)} watchlist projects"
     print(f"Building derived data ({scope}); {len(rental_map)} projects with rental medians…")
-    index, shards = build(raw, ref_month, rental_map)
+    index, shards, recent = build(raw, ref_month, rental_map)
 
     SHARD_DIR.mkdir(parents=True, exist_ok=True)
     # Clear stale shards so removed districts don't linger.
@@ -680,6 +709,7 @@ def main() -> int:
     # index sorted by transaction volume (most-traded first) for a sensible default.
     index.sort(key=lambda e: e["nAll"], reverse=True)
     (DATA_DIR / "index.json").write_text(json.dumps(index, separators=(",", ":")), encoding="utf-8")
+    (DATA_DIR / "recent.json").write_text(json.dumps(recent, separators=(",", ":")), encoding="utf-8")
 
     total_txns = 0
     for dkey, projs in shards.items():
@@ -697,6 +727,8 @@ def main() -> int:
         "transactionCount": total_txns,
         "districtCount": len(shards),
         "rentalProjectCount": len(rental_map),
+        "recentCount": len(recent),
+        "recentLatest": recent[0]["date"] if recent else None,
         "note": (
             "Derived view (computed PSF, medians, trends, distributions, approximate "
             "repeat-sale returns) over URA caveat data. Caveat data covers ~80–90% of "
