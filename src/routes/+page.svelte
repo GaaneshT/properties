@@ -42,6 +42,13 @@
 			loading = false;
 			ready = true;
 		}
+		// Arrived via a shared/“view history” link with a selection → scroll to it.
+		if (typeof window !== 'undefined' && selected.size > 0) {
+			setTimeout(
+				() => document.getElementById('compare')?.scrollIntoView({ behavior: 'smooth' }),
+				500
+			);
+		}
 	});
 
 	// Restore analysis from a shared link.
@@ -173,6 +180,20 @@
 		selected = next;
 	}
 	const clearSelection = () => (selected = new Set());
+
+	// One-click: select a project, jump to its full transaction history.
+	function viewHistory(name: string) {
+		const next = new Set(selected);
+		if (!next.has(name) && next.size < MAX_COMPARE) next.add(name);
+		selected = next;
+		compareTab = 'txns';
+		if (typeof document !== 'undefined') {
+			setTimeout(
+				() => document.getElementById('compare')?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+				60
+			);
+		}
+	}
 
 	let copied = $state(false);
 	let manualUrl = $state(''); // shown only if every copy path fails (e.g. http context)
@@ -520,7 +541,12 @@
 							/>
 						</td>
 						<td class="px-3 py-2.5">
-							<div class="font-medium text-ink-900 dark:text-white">{e.project}</div>
+							<button
+								type="button"
+								onclick={() => viewHistory(e.project)}
+								class="text-left font-medium text-ink-900 transition hover:text-neon-cyan dark:text-white dark:hover:text-neon-cyan"
+								title="View full transaction history"
+							>{e.project}</button>
 							<div class="text-xs text-ghost-500">
 								{e.street} · D{e.district} · <span title={REGION_LABELS[e.region] ?? ''}>{e.region}</span> · {e.tenureClass}
 							</div>

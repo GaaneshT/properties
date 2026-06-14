@@ -159,7 +159,11 @@
 			<div class="rounded-xl border border-ghost-200/60 bg-white/85 p-3 dark:border-ink-600/60 dark:bg-ink-900/60">
 				<div class="flex items-start justify-between gap-2">
 					<div class="min-w-0">
-						<div class="truncate font-medium text-ink-900 dark:text-white">{r.project}</div>
+						<a
+							href="{base}/?sel={encodeURIComponent(r.project)}&tab=txns"
+							class="block truncate font-medium text-ink-900 hover:text-neon-cyan dark:text-white dark:hover:text-neon-cyan"
+							title="View full transaction history"
+						>{r.project}</a>
 						<div class="truncate text-xs text-ghost-500">{r.street} · D{r.district} · {r.region}</div>
 					</div>
 					<div class="shrink-0 text-right">
@@ -202,7 +206,11 @@
 					<tr class="border-b border-ghost-200/40 transition hover:bg-ghost-50/70 dark:border-ink-600/30 dark:hover:bg-ink-800/40">
 						<td class="whitespace-nowrap px-3 py-2.5 text-ghost-500">{fmtMonth(r.date)}</td>
 						<td class="px-3 py-2.5">
-							<div class="font-medium text-ink-900 dark:text-white">{r.project}</div>
+							<a
+								href="{base}/?sel={encodeURIComponent(r.project)}&tab=txns"
+								class="font-medium text-ink-900 hover:text-neon-cyan dark:text-white dark:hover:text-neon-cyan"
+								title="View full transaction history"
+							>{r.project}</a>
 							<div class="text-xs text-ghost-500">{r.street}</div>
 						</td>
 						<td class="whitespace-nowrap px-3 py-2.5 font-medium text-ink-900 dark:text-ghost-100">{fmtPriceFull(r.price)}</td>
