@@ -19,7 +19,9 @@
 
 	onMount(async () => {
 		try {
-			[rows, meta] = await Promise.all([loadRecent(), loadMeta().catch(() => null)]);
+			const [r, m] = await Promise.all([loadRecent(), loadMeta().catch(() => null)]);
+			rows = r;
+			meta = m;
 		} catch (e) {
 			loadError = e instanceof Error ? e.message : String(e);
 		} finally {
