@@ -148,7 +148,7 @@
 
 	<!-- Cards (mobile/tablet) -->
 	<section class="space-y-2 lg:hidden">
-		{#each visible as r (r.project + r.date + r.price + r.floorRange)}
+		{#each visible as r, i (i)}
 			<div class="rounded-xl border border-ghost-200/60 bg-white/85 p-3 dark:border-ink-600/60 dark:bg-ink-900/60">
 				<div class="flex items-start justify-between gap-2">
 					<div class="min-w-0">
@@ -191,7 +191,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each visible as r (r.project + r.date + r.price + r.floorRange)}
+				{#each visible as r, i (i)}
 					<tr class="border-b border-ghost-200/40 transition hover:bg-ghost-50/70 dark:border-ink-600/30 dark:hover:bg-ink-800/40">
 						<td class="whitespace-nowrap px-3 py-2.5 text-ghost-500">{fmtMonth(r.date)}</td>
 						<td class="px-3 py-2.5">
