@@ -1,9 +1,9 @@
 {
-  "refreshedAt": "2026-06-14T06:20:32.077563+00:00",
+  "refreshedAt": "2026-06-16T07:28:17.619288+00:00",
   "source": "URA Data Service \u00b7 PMI_Resi_Transaction + PMI_Resi_Rental_Median (60-month window)",
   "service": "PMI_Resi_Transaction",
   "projectCount": 2986,
-  "transactionCount": 137766,
+  "transactionCount": 137470,
   "districtCount": 28,
   "rentalProjectCount": 917,
   "recentCount": 4000,
