@@ -74,14 +74,14 @@
 </svelte:head>
 
 <section class="space-y-2">
-	<span class="text-xs font-semibold uppercase tracking-[0.15em] text-neon-cyan">URA caveats</span>
+	<span class="text-[13px] font-semibold tracking-[0.02em] text-ghost-600 uppercase">URA caveats</span>
 	<h1 class="text-3xl font-semibold text-ink-900 dark:text-white">Recent transactions</h1>
 	<p class="max-w-2xl text-sm text-ink-600 dark:text-ghost-300">
 		The latest private-residential caveats lodged with URA, market-wide. URA dates caveats by month,
 		so these are ordered by most recent month{meta?.recentLatest ? ` (latest: ${fmtMonth(meta.recentLatest)})` : ''}.
 	</p>
 	<p class="max-w-2xl text-xs text-ghost-500">
-		This is a market-wide snapshot of the most recent months only — so searching one project here
+		This is a market-wide snapshot of the most recent months only, so searching one project here
 		shows just its latest sales. For a project's <strong>full 60-month transaction history</strong>,
 		open <a href="{base}/" class="text-neon-cyan hover:underline">Analytics</a>, search the project,
 		tick it, and use the “All transactions” tab.

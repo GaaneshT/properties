@@ -12,10 +12,10 @@
 
 <div class="flex flex-col gap-1">
 	{#if kicker}
-		<span class="text-xs font-semibold uppercase tracking-[0.15em] text-neon-cyan">{kicker}</span>
+		<span class="text-[13px] font-semibold tracking-[0.02em] text-ghost-600 uppercase">{kicker}</span>
 	{/if}
-	<h2 class="text-xl font-semibold text-ink-900 dark:text-white">{title}</h2>
+	<h2 class="text-xl font-semibold text-ink-900">{title}</h2>
 	{#if children}
-		<p class="max-w-2xl text-sm text-ink-600 dark:text-ghost-300">{@render children()}</p>
+		<p class="max-w-2xl text-[15px] text-ink-700">{@render children()}</p>
 	{/if}
 </div>

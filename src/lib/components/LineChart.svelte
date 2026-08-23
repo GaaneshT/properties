@@ -154,7 +154,7 @@
 		<div
 			class="mt-2 inline-flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-ghost-200/60 bg-white/95 px-3 py-1.5 font-mono text-[11px] text-ink-700 shadow-sm dark:border-ink-600/60 dark:bg-ink-900/80 dark:text-ghost-200"
 		>
-			<span class="font-semibold text-neon-cyan">{hover.q}</span>
+			<span class="font-semibold text-ink-900">{hover.q}</span>
 			<span>{hover.label}</span>
 			<span class="text-ink-900 dark:text-white">{fmtPsf(hover.psf)} psf</span>
 			<span class="text-ghost-500">· {hover.n} txn{hover.n === 1 ? '' : 's'}</span>

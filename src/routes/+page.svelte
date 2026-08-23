@@ -350,7 +350,7 @@
 
 <!-- Header -->
 <section class="space-y-2">
-	<span class="text-xs font-semibold uppercase tracking-[0.15em] text-neon-cyan">URA caveat data</span>
+	<span class="text-[13px] font-semibold tracking-[0.02em] text-ghost-600 uppercase">URA caveat data</span>
 	<h1 class="text-3xl font-semibold text-ink-900 dark:text-white">Singapore property analytics</h1>
 	<p class="max-w-2xl text-sm text-ink-600 dark:text-ghost-300">
 		Browse, filter and compare private residential projects on median PSF, price trend, size and
@@ -446,7 +446,7 @@
 					value={manualUrl}
 					onfocus={(e) => e.currentTarget.select()}
 					class="w-full rounded-lg border border-ghost-200/70 bg-ghost-50 px-3 py-1.5 text-xs text-ink-900 dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100"
-					aria-label="Shareable link — tap to select and copy"
+					aria-label="Shareable link, tap to select and copy"
 				/>
 			</div>
 			<p class="mt-1 text-[11px] text-ghost-500">Tap the link above to select, then copy.</p>
@@ -605,7 +605,7 @@
 					<span class="text-xs font-medium text-ghost-500">Sale type</span>
 					{#each SALE_OPTIONS as code}
 						{@const on = sales.has(code)}
-						<button type="button" onclick={() => toggleSale(code)} class="rounded-full px-3 py-1 text-xs transition {on ? 'bg-ink-900 text-neon-cyan dark:bg-ink-700' : 'border border-ghost-200/70 text-ghost-500 dark:border-ink-600/70'}">{SALE_LABELS[code]}</button>
+						<button type="button" onclick={() => toggleSale(code)} class="rounded-full px-3 py-1 text-xs transition {on ? 'bg-neon-cyan text-ghost-50' : 'border border-ghost-200/70 text-ghost-500 dark:border-ink-600/70'}">{SALE_LABELS[code]}</button>
 					{/each}
 				</div>
 				<div class="flex items-center gap-2">
@@ -657,7 +657,7 @@
 						<button
 							type="button"
 							onclick={() => (compareTab = t.id)}
-							class="rounded-full px-3 py-1.5 transition {compareTab === t.id ? 'bg-ink-900 text-neon-cyan dark:bg-ink-700' : 'text-ghost-500 hover:text-ink-900 dark:hover:text-white'}"
+							class="rounded-full px-3 py-1.5 transition {compareTab === t.id ? 'bg-neon-cyan text-ghost-50' : 'text-ghost-500 hover:text-ink-900 dark:hover:text-white'}"
 						>{t.label}</button>
 					{/each}
 				</div>

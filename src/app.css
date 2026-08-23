@@ -1,93 +1,91 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 
-/* ───────────────────────────────────────────────────────────────────────
-   Theme tokens — mirrors portfolio + blog
-   ─────────────────────────────────────────────────────────────────────── */
+/* The data views are built almost entirely from Tailwind utilities, so the
+   palette is re-themed by redefining the theme tokens rather than by rewriting
+   the markup. The markup pairs light-mode classes with dark: overrides and the
+   site now renders light only, so the light-mode values are what these tokens
+   need to be: text-ink-900 is a heading, border-ghost-200 is a hairline,
+   text-ghost-500 is secondary copy.
+
+   --blue is reserved for interactive elements and ornament. Text emphasis uses
+   --ink bold, so blue always means "clickable". Chart series colours are the
+   one exception and live in --series-*. */
+
 @theme {
-	--color-ink-950: #060814;
-	--color-ink-900: #0a0e1a;
-	--color-ink-850: #0d1220;
-	--color-ink-800: #0f1424;
-	--color-ink-700: #161b2e;
-	--color-ink-600: #1f2742;
-	--color-ink-500: #2a3454;
-	--color-ink-400: #3b4870;
+	--color-ink-950: #14120f;
+	--color-ink-900: #14120f;
+	--color-ink-850: #1d1a16;
+	--color-ink-800: #453f37;
+	--color-ink-700: #453f37;
+	--color-ink-600: #453f37;
+	--color-ink-500: #c6bfae;
+	--color-ink-400: #c6bfae;
 
-	--color-ghost-50: #f4f6fb;
-	--color-ghost-100: #e6eaf5;
-	--color-ghost-200: #c8d0e6;
-	--color-ghost-300: #a3aec9;
-	--color-ghost-400: #8b95b2;
-	--color-ghost-500: #5a6485;
+	--color-ghost-50: #fffdf8;
+	--color-ghost-100: #f2eee4;
+	--color-ghost-200: #dcd6c9;
+	--color-ghost-300: #c6bfae;
+	--color-ghost-400: #8c8375;
+	--color-ghost-500: #6f685e;
+	--color-ghost-600: #6a635a;
 
-	--color-neon-cyan: #67e8f9;
-	--color-neon-teal: #5eead4;
-	--color-neon-violet: #c084fc;
-	--color-neon-rose: #fb7185;
-	--color-neon-green: #4ade80;
-	--color-neon-amber: #fbbf24;
+	--color-neon-cyan: #12409e;
+	--color-neon-teal: #2c6e49;
+	--color-neon-violet: #6b3fa0;
+	--color-neon-rose: #a3341f;
+	--color-neon-green: #2c6e49;
+	--color-neon-amber: #8a6100;
 
-	--font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-	--font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace;
+	--font-sans: 'Public Sans', system-ui, sans-serif;
+	--font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+	--font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
-	--shadow-neon-cyan:
-		0 0 0 1px rgba(103, 232, 249, 0.25), 0 8px 32px -8px rgba(103, 232, 249, 0.45);
-	--shadow-inset-line: inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+	/* Depth comes from hairline borders and the card surface, not shadows. */
+	--shadow-2xs: none;
+	--shadow-xs: none;
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-xl: none;
+	--shadow-2xl: none;
+	--shadow-inset-line: none;
+	--shadow-neon-cyan: 0 0 0 1px rgba(18, 64, 158, 0.25);
 
-	--animate-blink: blink 1.05s steps(1) infinite;
-	--animate-scan: scan 7s linear infinite;
-	--animate-glow: glow 24s ease-in-out infinite alternate;
-}
-
-@keyframes blink {
-	0%,
-	49% {
-		opacity: 1;
-	}
-	50%,
-	100% {
-		opacity: 0;
-	}
-}
-@keyframes scan {
-	0% {
-		transform: translateY(-100%);
-	}
-	100% {
-		transform: translateY(100%);
-	}
-}
-@keyframes glow {
-	0%,
-	100% {
-		opacity: 0.55;
-		transform: translate3d(-12px, -6px, 0) scale(1);
-	}
-	50% {
-		opacity: 0.85;
-		transform: translate3d(18px, 14px, 0) scale(1.08);
-	}
-}
-@keyframes ping {
-	75%,
-	100% {
-		transform: scale(2);
-		opacity: 0;
-	}
+	--radius-lg: 3px;
+	--radius-xl: 4px;
+	--radius-2xl: 4px;
+	--radius-3xl: 4px;
+	--radius-4xl: 4px;
 }
 
 @variant dark (&:where(.dark, .dark *));
 
-/* ───────────────────────────────────────────────────────────────────────
-   Base
-   ─────────────────────────────────────────────────────────────────────── */
 :root {
-	color-scheme: dark light;
-	--grid-line: rgba(103, 232, 249, 0.06);
-}
-.dark {
-	--grid-line: rgba(103, 232, 249, 0.07);
+	--paper: #f7f4ee;
+	--ink: #14120f;
+	--ink2: #453f37;
+	--dim: #6f685e;
+	--faint: #6a635a;
+	--rule: #dcd6c9;
+	--rule2: #c6bfae;
+	--card: #fffdf8;
+	--blue: #12409e;
+	--blue-deep: #0e3585;
+	--blue-soft: rgba(18, 64, 158, 0.1);
+	--disp: 'Bricolage Grotesque', system-ui, sans-serif;
+	--body: 'Public Sans', system-ui, sans-serif;
+
+	/* Chart series. Ordered for categorical use and distinguishable in
+	   greyscale; the first is the interaction blue because the primary series
+	   usually is the selected one. */
+	--series-1: #12409e;
+	--series-2: #a3341f;
+	--series-3: #2c6e49;
+	--series-4: #6b3fa0;
+	--series-5: #8a6100;
+
+	color-scheme: light;
 }
 
 * {
@@ -100,110 +98,178 @@ html {
 }
 
 body {
-	font-family: var(--font-sans);
-	background-color: var(--color-ghost-50);
-	color: var(--color-ink-900);
+	font-family: var(--body);
+	background-color: var(--paper);
+	color: var(--ink);
+	font-size: 17px;
+	line-height: 1.6;
 	min-height: 100vh;
-	transition:
-		background-color 0.4s ease,
-		color 0.4s ease;
 }
-.dark body {
-	background-color: var(--color-ink-950);
-	color: var(--color-ghost-100);
+
+a {
+	color: inherit;
+	text-decoration: none;
 }
 
 *:focus-visible {
-	outline: 2px solid var(--color-neon-cyan);
+	outline: 2px solid var(--blue);
 	outline-offset: 3px;
-	border-radius: 6px;
+	border-radius: 3px;
 }
 
 ::selection {
-	background: rgba(103, 232, 249, 0.25);
-	color: inherit;
+	background: var(--blue);
+	color: var(--paper);
 }
 
-/* ───────────────────────────────────────────────────────────────────────
-   Reusable effects
-   ─────────────────────────────────────────────────────────────────────── */
-.fx-grid {
-	background-image:
-		linear-gradient(var(--grid-line) 1px, transparent 1px),
-		linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-	background-size: 48px 48px;
-	mask-image: radial-gradient(ellipse at 50% 0%, black 30%, transparent 75%);
-	-webkit-mask-image: radial-gradient(ellipse at 50% 0%, black 30%, transparent 75%);
+/* ── shared chrome ───────────────────────────────────────────────────── */
+.wrap {
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 0 34px;
 }
 
-.prompt-heading {
-	font-family: var(--font-mono);
-	font-size: 0.875rem;
+@media (max-width: 600px) {
+	.wrap {
+		padding: 0 22px;
+	}
+	body {
+		font-size: 16px;
+	}
+}
+
+.skip {
+	position: absolute;
+	left: -9999px;
+}
+.skip:focus {
+	position: fixed;
+	left: 16px;
+	top: 16px;
+	z-index: 50;
+	background: var(--blue);
+	color: #fff;
+	padding: 10px 16px;
+	border-radius: 3px;
+	font-size: 15px;
+}
+
+.bar {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	padding: 26px 0;
+	gap: 20px;
+	flex-wrap: wrap;
+}
+.bar .me {
+	font-family: var(--disp);
 	font-weight: 600;
-	letter-spacing: 0.02em;
-	color: var(--color-neon-cyan);
+	font-size: 17px;
+	letter-spacing: -0.01em;
 }
-.prompt-heading .user {
-	color: var(--color-neon-green);
+.bar .nav {
+	display: flex;
+	gap: 20px;
+	font-size: 15px;
+	color: var(--dim);
+	flex-wrap: wrap;
 }
-.prompt-heading .at {
-	color: var(--color-ghost-400);
+.bar .nav a {
+	transition: color 0.18s;
+	padding-bottom: 2px;
+	border-bottom: 1.5px solid transparent;
 }
-.prompt-heading .host {
-	color: var(--color-neon-violet);
-}
-.prompt-heading .path {
-	color: var(--color-neon-cyan);
-}
-.prompt-heading .sign {
-	color: var(--color-ghost-400);
-}
-.prompt-heading .cmd {
-	color: var(--color-ghost-100);
-}
-
-.cursor::after {
-	content: '▌';
-	display: inline-block;
-	margin-left: 2px;
-	color: var(--color-neon-cyan);
-	animation: var(--animate-blink);
+.bar .nav a:hover,
+.bar .nav a.here {
+	color: var(--blue);
+	border-color: var(--blue);
 }
 
-.kbd {
+.phead {
+	padding: 34px 0 0;
+}
+.phead h1 {
+	font-family: var(--disp);
+	font-size: clamp(30px, 4.4vw, 46px);
+	font-weight: 600;
+	letter-spacing: -0.028em;
+	line-height: 1.1;
+}
+.phead p {
+	font-size: clamp(17px, 1.7vw, 19.5px);
+	color: var(--ink2);
+	max-width: 36em;
+	margin-top: 16px;
+	line-height: 1.62;
+}
+
+.back {
 	display: inline-flex;
 	align-items: center;
-	justify-content: center;
-	border-radius: 0.375rem;
-	border: 1px solid var(--color-ink-600);
-	background: rgba(15, 20, 36, 0.7);
-	padding: 0.125rem 0.375rem;
-	font-family: var(--font-mono);
-	font-size: 10px;
-	font-weight: 500;
-	color: var(--color-ghost-300);
-	box-shadow: var(--shadow-inset-line);
+	gap: 8px;
+	font-size: 14.5px;
+	color: var(--dim);
+	transition: 0.18s;
+}
+.back:hover {
+	color: var(--blue);
 }
 
-.dot-live {
-	position: relative;
-	display: inline-flex;
-	height: 8px;
-	width: 8px;
-	border-radius: 999px;
-	background: var(--color-neon-green);
+.caveat {
+	margin-top: 30px;
+	padding: 18px 22px;
+	background: var(--card);
+	border: 1px solid var(--rule);
+	border-radius: 3px;
+	border-left: 3px solid var(--blue);
 }
-.dot-live::after {
-	content: '';
-	position: absolute;
-	inset: 0;
-	border-radius: 999px;
-	background: rgba(74, 222, 128, 0.6);
-	animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+.caveat p {
+	font-size: 15.5px;
+	color: var(--ink2);
+	line-height: 1.55;
+}
+.caveat p b {
+	color: var(--ink);
+	font-weight: 600;
 }
 
-.glow-text {
-	text-shadow: 0 0 18px rgba(103, 232, 249, 0.45);
+footer {
+	margin-top: 78px;
+	border-top: 1px solid var(--rule);
+	padding: 22px 0 46px;
+}
+footer .wrap {
+	display: flex;
+	justify-content: space-between;
+	font-size: 14px;
+	color: var(--faint);
+	flex-wrap: wrap;
+	gap: 14px;
+}
+footer .fl {
+	display: flex;
+	gap: 18px;
+	flex-wrap: wrap;
+}
+footer a {
+	transition: 0.18s;
+}
+footer a:hover {
+	color: var(--blue);
+}
+
+h1,
+h2,
+h3 {
+	font-family: var(--disp);
+	letter-spacing: -0.02em;
+}
+
+/* Figures read better with tabular numerals. */
+table,
+.tabular {
+	font-variant-numeric: tabular-nums;
 }
 
 .text-balance {
@@ -213,7 +279,6 @@ body {
 	text-wrap: pretty;
 }
 
-/* Form input baseline tweaks (used by Tailwind forms plugin) */
 input[type='text'],
 input[type='number'],
 input[type='password'],
