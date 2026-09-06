@@ -144,9 +144,12 @@
 <section class="house-studio" aria-labelledby="studio-title">
 	<header class="studio-heading">
 		<div>
-			<p class="eyebrow"><span></span> RENOVATION <b>/</b> HOUSE STUDIO</p>
-			<h1 id="studio-title">Your home. <em>Every possibility.</em></h1>
-			<p class="intro">Step inside your space. Find the feeling that makes it yours.</p>
+			<p class="eyebrow"><span></span> INTERIOR DESIGN <b>/</b> HOUSE STUDIO</p>
+			<h1 id="studio-title">One floor plan. <em>Four ways.</em></h1>
+			<p class="intro">
+				Interior design references for a three-bedroom renovation, rendered in Blender and walkable
+				in 3D.
+			</p>
 		</div>
 		<div class="property-meta">
 			<span>THREE BEDROOMS</span><strong>1,647 <small>sq ft</small></strong>
@@ -269,7 +272,7 @@
 				<p>
 					<span class="small-dot"></span>{mode === 'explore'
 						? navigation === 'walk'
-							? 'Walk through your home · choose a room below to jump there'
+							? 'Walking the model · pick a room below to jump there'
 							: 'Whole-house view · textured furniture and soft shadows'
 						: mode === 'compare'
 							? 'Same camera & render tier · slide to compare finishes'
@@ -286,8 +289,8 @@
 		<aside class="design-panel" aria-label="Design themes">
 			<div class="panel-top">
 				<p class="eyebrow">THE MATERIAL PALETTE</p>
-				<h2>One home.<br />Four expressions.</h2>
-				<p>Explore a complete design, with the same architectural shell.</p>
+				<h2>Four material<br />directions.</h2>
+				<p>Each is a complete scheme over the same architectural shell.</p>
 			</div>
 			<div class="theme-list">
 				{#each themes as item, index (item.id)}<button
@@ -305,8 +308,8 @@
 					>{/each}
 			</div>
 			<div class="panel-bottom">
-				<span>DESIGNED TO BE EXPLORED</span>
-				<p>Choose a theme here.<br />Choose your space below.</p>
+				<span>NAVIGATION</span>
+				<p>Pick a theme here.<br />Pick a room below.</p>
 				<button onclick={copyLink}>Copy this view <span>↗</span></button>
 			</div>
 		</aside>
@@ -316,7 +319,7 @@
 		<div class="space-heading">
 			<div>
 				<p class="eyebrow">A CLOSER LOOK</p>
-				<h2 id="spaces-title">Every corner, considered.</h2>
+				<h2 id="spaces-title">Room by room.</h2>
 			</div>
 			<p>20 viewpoints <span>·</span> 4 concepts</p>
 		</div>
