@@ -24,6 +24,7 @@ export const navLinks: Link[] = [
 	{ label: 'Projects', url: `${PORTFOLIO}/#projects`, external: true },
 	{ label: 'Overview', url: '/' },
 	{ label: 'Recent', url: '/recent' },
+	{ label: 'House Studio', url: '/house' },
 	{ label: 'Tools', url: links.tools, external: true },
 	{ label: 'Contact', url: `${PORTFOLIO}/#contact`, external: true }
 ];

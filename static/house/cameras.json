@@ -1,0 +1,462 @@
+[
+  {
+    "id": "C01",
+    "name": "C01_Overview_Dollhouse",
+    "scene": "00_START_OVERVIEW",
+    "purpose": "Overview_Dollhouse",
+    "location": [
+      22.0,
+      28.0,
+      16.0
+    ],
+    "target": [
+      5.75,
+      0.0,
+      -7.0
+    ],
+    "lens_mm": 35,
+    "sensor_mm": 36,
+    "shift_y": 0.0,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": 23,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C02",
+    "name": "C02_Plan_Orthographic",
+    "scene": "03_PLAN_ORTHO",
+    "purpose": "Plan_Orthographic",
+    "location": [
+      5.75,
+      35.0,
+      -6.940000057220459
+    ],
+    "target": [
+      5.75,
+      0.0,
+      -6.940000057220459
+    ],
+    "lens_mm": 35,
+    "sensor_mm": 36,
+    "shift_y": 0.0,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": 17.3,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C03",
+    "name": "C03_Living_Toward_PES",
+    "scene": "01_DAY_INTERIOR",
+    "purpose": "Living_Toward_PES",
+    "location": [
+      8.492483139038086,
+      1.5800000429153442,
+      -6.852237701416016
+    ],
+    "target": [
+      9.642187118530273,
+      1.5800000429153442,
+      -10.63859748840332
+    ],
+    "lens_mm": 24,
+    "sensor_mm": 36,
+    "shift_y": -0.04500000178813934,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C04",
+    "name": "C04_Living_Toward_Media",
+    "scene": "01_DAY_INTERIOR",
+    "purpose": "Living_Toward_Media",
+    "location": [
+      10.837879180908203,
+      1.5800000429153442,
+      -10.623268127441406
+    ],
+    "target": [
+      8.477153778076172,
+      1.5800000429153442,
+      -8.66110610961914
+    ],
+    "lens_mm": 24,
+    "sensor_mm": 36,
+    "shift_y": -0.04500000178813934,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C05",
+    "name": "C05_Dining_Entry",
+    "scene": "01_DAY_INTERIOR",
+    "purpose": "Dining_Entry",
+    "location": [
+      10.48530387878418,
+      1.5800000429153442,
+      -2.667314052581787
+    ],
+    "target": [
+      9.19763469696045,
+      1.5800000429153442,
+      -5.3959455490112305
+    ],
+    "lens_mm": 24,
+    "sensor_mm": 36,
+    "shift_y": -0.04500000178813934,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C06",
+    "name": "C06_Master_Bed",
+    "scene": "01_DAY_INTERIOR",
+    "purpose": "Master_Bed",
+    "location": [
+      4.3842058181762695,
+      1.5800000429153442,
+      -9.70350456237793
+    ],
+    "target": [
+      2.3147380352020264,
+      1.5800000429153442,
+      -11.221114158630371
+    ],
+    "lens_mm": 24,
+    "sensor_mm": 36,
+    "shift_y": -0.1599999964237213,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C07",
+    "name": "C07_Master_Storage",
+    "scene": "01_DAY_INTERIOR",
+    "purpose": "Master_Storage",
+    "location": [
+      4.123606204986572,
+      1.5800000429153442,
+      -12.309500694274902
+    ],
+    "target": [
+      2.866596221923828,
+      1.5800000429153442,
+      -8.92170524597168
+    ],
+    "lens_mm": 24,
+    "sensor_mm": 36,
+    "shift_y": -0.04500000178813934,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C08",
+    "name": "C08_Bedroom_2",
+    "scene": "01_DAY_INTERIOR",
+    "purpose": "Bedroom_2",
+    "location": [
+      2.25342059135437,
+      1.5800000429153442,
+      -5.687204360961914
+    ],
+    "target": [
+      1.8548563718795776,
+      1.5800000429153442,
+      -3.9549829959869385
+    ],
+    "lens_mm": 22,
+    "sensor_mm": 36,
+    "shift_y": -0.23000000417232513,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C09",
+    "name": "C09_Bedroom_3",
+    "scene": "01_DAY_INTERIOR",
+    "purpose": "Bedroom_3",
+    "location": [
+      4.936063766479492,
+      1.5800000429153442,
+      -7.695354461669922
+    ],
+    "target": [
+      6.514991283416748,
+      1.5800000429153442,
+      -9.7801513671875
+    ],
+    "lens_mm": 22,
+    "sensor_mm": 36,
+    "shift_y": -0.04500000178813934,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C10",
+    "name": "C10_Kitchen",
+    "scene": "01_DAY_INTERIOR",
+    "purpose": "Kitchen",
+    "location": [
+      9.289610862731934,
+      1.5800000429153442,
+      -2.5140202045440674
+    ],
+    "target": [
+      7.64936637878418,
+      1.5800000429153442,
+      -0.7358107566833496
+    ],
+    "lens_mm": 24,
+    "sensor_mm": 36,
+    "shift_y": -0.04500000178813934,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C11",
+    "name": "C11_Bath_1",
+    "scene": "01_DAY_INTERIOR",
+    "purpose": "Bath_1",
+    "location": [
+      3.1731839179992676,
+      1.5499999523162842,
+      -7.634037017822266
+    ],
+    "target": [
+      2.2840793132781982,
+      1.0199999809265137,
+      -6.6376261711120605
+    ],
+    "lens_mm": 20,
+    "sensor_mm": 36,
+    "shift_y": 0.0,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C12",
+    "name": "C12_Bath_2",
+    "scene": "01_DAY_INTERIOR",
+    "purpose": "Bath_2",
+    "location": [
+      3.694383382797241,
+      1.5299999713897705,
+      -4.859416961669922
+    ],
+    "target": [
+      4.905405044555664,
+      1.0499999523162842,
+      -3.5257599353790283
+    ],
+    "lens_mm": 20,
+    "sensor_mm": 36,
+    "shift_y": 0.0,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C13",
+    "name": "C13_Utility_Store_DIAGNOSTIC",
+    "scene": "04_SERVICE_DIAGNOSTIC",
+    "purpose": "Utility_Store_DIAGNOSTIC",
+    "location": [
+      6.438344478607178,
+      8.0,
+      -1.9008444547653198
+    ],
+    "target": [
+      6.438344478607178,
+      0.25,
+      -4.522170543670654
+    ],
+    "lens_mm": 35,
+    "sensor_mm": 36,
+    "shift_y": 0.0,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": 4.8,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C14",
+    "name": "C14_Yard_WC_Bin_DIAGNOSTIC",
+    "scene": "04_SERVICE_DIAGNOSTIC",
+    "purpose": "Yard_WC_Bin_DIAGNOSTIC",
+    "location": [
+      8.201224327087402,
+      9.0,
+      2.238091230392456
+    ],
+    "target": [
+      4.7674407958984375,
+      0.20000000298023224,
+      -1.440962791442871
+    ],
+    "lens_mm": 35,
+    "sensor_mm": 36,
+    "shift_y": 0.0,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": 5.4,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C15",
+    "name": "C15_PES",
+    "scene": "01_DAY_INTERIOR",
+    "purpose": "PES",
+    "location": [
+      11.1444673538208,
+      1.5800000429153442,
+      -11.910937309265137
+    ],
+    "target": [
+      7.358107566833496,
+      1.5800000429153442,
+      -13.90375804901123
+    ],
+    "lens_mm": 24,
+    "sensor_mm": 36,
+    "shift_y": -0.04500000178813934,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C16",
+    "name": "C16_Living_Evening",
+    "scene": "02_EVENING_INTERIOR",
+    "purpose": "Living_Evening",
+    "location": [
+      8.492483139038086,
+      1.5800000429153442,
+      -6.852237701416016
+    ],
+    "target": [
+      9.642187118530273,
+      1.5800000429153442,
+      -10.63859748840332
+    ],
+    "lens_mm": 24,
+    "sensor_mm": 36,
+    "shift_y": -0.04500000178813934,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C17",
+    "name": "C17_Bath_1_Vanity_Supplement",
+    "scene": "01_DAY_INTERIOR",
+    "purpose": "Bath_1_Vanity_Supplement",
+    "location": [
+      3.1271958351135254,
+      1.559999942779541,
+      -6.499661922454834
+    ],
+    "target": [
+      2.1461148262023926,
+      1.350000023841858,
+      -8.461824417114258
+    ],
+    "lens_mm": 20,
+    "sensor_mm": 36,
+    "shift_y": 0.0,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C18",
+    "name": "C18_Yard_Eye_Supplement",
+    "scene": "01_DAY_INTERIOR",
+    "purpose": "Yard_Eye_Supplement",
+    "location": [
+      4.9513936042785645,
+      1.5800000429153442,
+      -0.5211992859840393
+    ],
+    "target": [
+      5.855827331542969,
+      1.5800000429153442,
+      -2.0847971439361572
+    ],
+    "lens_mm": 20,
+    "sensor_mm": 36,
+    "shift_y": -0.14000000059604645,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C19",
+    "name": "C19_Service_WC_Supplement",
+    "scene": "01_DAY_INTERIOR",
+    "purpose": "Service_WC_Supplement",
+    "location": [
+      4.399535179138184,
+      1.5199999809265137,
+      -1.2876688241958618
+    ],
+    "target": [
+      3.817018508911133,
+      1.0,
+      -2.3453967571258545
+    ],
+    "lens_mm": 18,
+    "sensor_mm": 36,
+    "shift_y": 0.0,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  },
+  {
+    "id": "C20",
+    "name": "C20_Bedroom_2_Reverse_Supplement",
+    "scene": "01_DAY_INTERIOR",
+    "purpose": "Bedroom_2_Reverse_Supplement",
+    "location": [
+      0.4905405044555664,
+      1.5800000429153442,
+      -3.1271958351135254
+    ],
+    "target": [
+      2.238091230392456,
+      1.5800000429153442,
+      -4.89007568359375
+    ],
+    "lens_mm": 22,
+    "sensor_mm": 36,
+    "shift_y": -0.18000000715255737,
+    "clip_start": 0.03500000014901161,
+    "clip_end": 180.0,
+    "ortho_scale": null,
+    "status": "PRESENTATION"
+  }
+]

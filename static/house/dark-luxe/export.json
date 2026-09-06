@@ -1,0 +1,11 @@
+{
+  "style": "dark-luxe",
+  "source_file": "Carissa_Park_04_Dark_Luxe.blend",
+  "source_sha256": "5cb20f2903b7e0eca07bf120837d10f0dc48b58627a63e50dcd7df99a3b2c3a4",
+  "source_objects": 2107,
+  "exported_meshes": 67,
+  "bytes": 17197988,
+  "geometry": "Evaluated native geometry, no decimation",
+  "materials": "Base PBR values; native procedural grain/bump and Cycles illumination are represented by the separate renders",
+  "omitted": "Generic garden context, studio ground, lights, cameras, reference images"
+}

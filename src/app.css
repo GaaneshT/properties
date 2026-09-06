@@ -279,6 +279,59 @@ table,
 	text-wrap: pretty;
 }
 
+/* The house studio has its own dark luxe surface; analytics keep their palette. */
+body:has(.house-studio) {
+	--paper: #101411;
+	--ink: #eceade;
+	--ink2: #c8ccba;
+	--dim: #a5ad99;
+	--faint: #97a189;
+	--rule: #ffffff16;
+	--blue: #c5ab7c;
+	color-scheme: dark;
+	background: radial-gradient(ellipse at 65% 0%, #242a1d70, transparent 55%), #101411;
+}
+.wrap.house-wrap {
+	max-width: 1480px;
+	padding: 0 42px;
+}
+.house-wrap .bar {
+	border-bottom: 1px solid #ffffff16;
+	padding: 24px 0;
+}
+.house-wrap .bar .me {
+	font-size: 14px;
+	font-weight: 500;
+}
+.house-wrap .bar .nav {
+	font-size: 12px;
+	gap: 24px;
+}
+body:has(.house-studio) footer {
+	margin-top: 22px;
+}
+@media (max-width: 850px) {
+	.wrap.house-wrap {
+		padding: 0 22px;
+	}
+	.house-wrap .bar .nav {
+		gap: 15px;
+	}
+}
+@media (max-width: 560px) {
+	.wrap.house-wrap {
+		padding: 0 16px;
+	}
+	.house-wrap .bar {
+		padding: 18px 0 14px;
+		gap: 11px;
+	}
+	.house-wrap .bar .nav {
+		font-size: 10px;
+		gap: 15px;
+	}
+}
+
 input[type='text'],
 input[type='number'],
 input[type='password'],

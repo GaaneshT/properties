@@ -1,0 +1,11 @@
+{
+  "style": "warm-japandi",
+  "source_file": "Carissa_Park_01_Warm_Japandi.blend",
+  "source_sha256": "9d7c075930e97881a60711d4de86bb97ce6cff5608cc2cbf10f9013ae2007ef2",
+  "source_objects": 2080,
+  "exported_meshes": 52,
+  "bytes": 16203312,
+  "geometry": "Evaluated native geometry, no decimation",
+  "materials": "Base PBR values; native procedural grain/bump and Cycles illumination are represented by the separate renders",
+  "omitted": "Generic garden context, studio ground, lights, cameras, reference images"
+}

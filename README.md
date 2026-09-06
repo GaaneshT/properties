@@ -11,6 +11,8 @@ Built with SvelteKit + `adapter-static` and Tailwind (matching the sibling
 
 ## What it does
 
+- **House Studio** at `/house` — dark luxe interface, 80 native Carissa Park Blender renders across four concepts, aligned theme comparisons and an optional interactive 3D explorer. See [House Studio](HOUSE_STUDIO.md) for controls, asset provenance, accuracy limits and local regeneration.
+
 - **League table of every project** (~3,000) — search, filter (type, region,
   tenure, min volume) and sort by median PSF, price trend, return p.a., gross
   yield, size, velocity.

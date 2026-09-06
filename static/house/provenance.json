@@ -1,0 +1,965 @@
+{
+  "notice": "Concept \u2014 dimensions unverified. Browser materials approximate native procedural shaders.",
+  "renders": [
+    {
+      "style": "dark-luxe",
+      "camera": "C01",
+      "image": "dark-luxe/C01.webp",
+      "dimensions": [
+        2000,
+        1562
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\standard\\04_Dark_Luxe\\C01_Overview_Dollhouse.png",
+      "sha256": "418de13d0d50625ae312c917e46895311ed762d54b252f75f9638ad47ee168f4"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C02",
+      "image": "dark-luxe/C02.webp",
+      "dimensions": [
+        1400,
+        1600
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\preview\\04_Dark_Luxe\\C02_Plan_Orthographic.png",
+      "sha256": "78e5f8d30821512dc066d8ca488799b39039ba1880cc995e89071b844b86e1c9"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C03",
+      "image": "dark-luxe/C03.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\standard\\04_Dark_Luxe\\C03_Living_Toward_PES.png",
+      "sha256": "0466377604d15afea647bf1b5b81559df473887c8a9d31ff5e047f01de0de99d"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C04",
+      "image": "dark-luxe/C04.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\standard\\04_Dark_Luxe\\C04_Living_Toward_Media.png",
+      "sha256": "439a2a5a199208826f9896e2463be5e3b7225b425acf60be4c303fd7eb563d56"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C05",
+      "image": "dark-luxe/C05.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\standard\\04_Dark_Luxe\\C05_Dining_Entry.png",
+      "sha256": "b200ce62494070b773a6264434ecac6c16a25ea8e623bed23c0c11d4d54e2836"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C06",
+      "image": "dark-luxe/C06.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\standard\\04_Dark_Luxe\\C06_Master_Bed.png",
+      "sha256": "4d24b2a62818083995d971d8869ad38aec4d280c4e3e3610341c67cb4ac62f7d"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C07",
+      "image": "dark-luxe/C07.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\preview\\04_Dark_Luxe\\C07_Master_Storage.png",
+      "sha256": "a100a4f51c4eccc7807f57de31e7f406d5d65dfcaea32ae99c8f9cf0e85d944c"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C08",
+      "image": "dark-luxe/C08.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\preview\\04_Dark_Luxe\\C08_Bedroom_2.png",
+      "sha256": "2908dc79d661b0066c2d7753a97c4e43c0e2bdc39d4d90409ad8e22f9cbe8183"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C09",
+      "image": "dark-luxe/C09.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\standard\\04_Dark_Luxe\\C09_Bedroom_3.png",
+      "sha256": "862c80c3fd7b5bc4d20e59f1c735b53cec18be23b01a6a3ee90ae27cee79a904"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C10",
+      "image": "dark-luxe/C10.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\standard\\04_Dark_Luxe\\C10_Kitchen.png",
+      "sha256": "71d09d42c6911a021bf5cf0590d5eec65f3d4036e55540052a2f004d3e951d3f"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C11",
+      "image": "dark-luxe/C11.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\standard\\04_Dark_Luxe\\C11_Bath_1.png",
+      "sha256": "0adc8143c2dabc7489949a533ed3acb9f188cfb105f9dda9b0da094f7333217d"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C12",
+      "image": "dark-luxe/C12.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\preview\\04_Dark_Luxe\\C12_Bath_2.png",
+      "sha256": "ddae71535818d33e0a52b5ef2bba9238b711d1f18579c8015ea45959e6578279"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C13",
+      "image": "dark-luxe/C13.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\preview\\04_Dark_Luxe\\C13_Utility_Store_DIAGNOSTIC.png",
+      "sha256": "f9321b2626227583f6180adb9c1cc74d49b67d7959e6f5134176f3247400dd6f"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C14",
+      "image": "dark-luxe/C14.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\preview\\04_Dark_Luxe\\C14_Yard_WC_Bin_DIAGNOSTIC.png",
+      "sha256": "d50bbc04400bd96e0d085d8a124bf35f0febd4e7ea85975b25bdb5cd6d499b59"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C15",
+      "image": "dark-luxe/C15.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\standard\\04_Dark_Luxe\\C15_PES.png",
+      "sha256": "263d760062e38a82974ff2d276b7ffafd531f8950dffdb7b943183f53953f6d7"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C16",
+      "image": "dark-luxe/C16.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\standard\\04_Dark_Luxe\\C16_Living_Evening.png",
+      "sha256": "99fed895f8341eb2bc89eb43bbdec574372b8080f3ae848dadc6842482f5b397"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C17",
+      "image": "dark-luxe/C17.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\standard\\04_Dark_Luxe\\C17_Bath_1_Vanity_Supplement.png",
+      "sha256": "cc385167d325b6d789d127f31804fe5d8754aef4a147bb893fcfc57fa4886816"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C18",
+      "image": "dark-luxe/C18.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\preview\\04_Dark_Luxe\\C18_Yard_Eye_Supplement.png",
+      "sha256": "5fcf64a7c55d18e75596cc1c886b41a3b304b1c620fa1fb4b7a99404d807d644"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C19",
+      "image": "dark-luxe/C19.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\preview\\04_Dark_Luxe\\C19_Service_WC_Supplement.png",
+      "sha256": "07ba1ff6014fcac94b96cb7d1173e68d37fa838e6685a924337856c53be7bd97"
+    },
+    {
+      "style": "dark-luxe",
+      "camera": "C20",
+      "image": "dark-luxe/C20.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260906_Dark_Luxe\\renders\\preview\\04_Dark_Luxe\\C20_Bedroom_2_Reverse_Supplement.png",
+      "sha256": "61e0c8c697620c710c63045e418fa7925c5b33ca0f51f4c92379489c34880189"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C01",
+      "image": "warm-japandi/C01.webp",
+      "dimensions": [
+        2000,
+        1562
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\standard\\01_Warm_Japandi\\C01_Overview_Dollhouse.png",
+      "sha256": "9c3689e14dcfec3e3534efa86b18ac0a101d9e1c5bfc642b2344d7f3fd3a757d"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C02",
+      "image": "warm-japandi/C02.webp",
+      "dimensions": [
+        1120,
+        1280
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\01_Warm_Japandi\\C02_Plan_Orthographic.png",
+      "sha256": "c40e9445fb3e08dffd8e916acb372d631961f42ee71dca92f56c45d27427e784"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C03",
+      "image": "warm-japandi/C03.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\standard\\01_Warm_Japandi\\C03_Living_Toward_PES.png",
+      "sha256": "ce27aacef19dafb67b3ab9d151bea8b990ff64df1c1529031325bf416f7004f9"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C04",
+      "image": "warm-japandi/C04.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\01_Warm_Japandi\\C04_Living_Toward_Media.png",
+      "sha256": "f6f528d01f0c09be1be48227568375ead580b5593ae4269268391322c76bae4c"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C05",
+      "image": "warm-japandi/C05.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\01_Warm_Japandi\\C05_Dining_Entry.png",
+      "sha256": "a7429b18995ce3113a7e0258585a3b95a0be402b277b669b1308b6ca91795ce5"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C06",
+      "image": "warm-japandi/C06.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\standard\\01_Warm_Japandi\\C06_Master_Bed.png",
+      "sha256": "e7b4f325ec4959c79306bb969cc16c0d3ddab24f953fdaa8a3d061de9b74c4e1"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C07",
+      "image": "warm-japandi/C07.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\01_Warm_Japandi\\C07_Master_Storage.png",
+      "sha256": "9d8272a0c0435cf46df0dc7627a24ff5c2b73b97756de9be6d00217888d6d985"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C08",
+      "image": "warm-japandi/C08.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\01_Warm_Japandi\\C08_Bedroom_2.png",
+      "sha256": "a74df6dc0b10d04349f619b7ab5e4cf4e550f73b47f8a95cb19230e705e0867f"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C09",
+      "image": "warm-japandi/C09.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\01_Warm_Japandi\\C09_Bedroom_3.png",
+      "sha256": "754c6a28522f9e73890c0525137d5ff4bceceb66a4231bd3f5c23c7350dc7857"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C10",
+      "image": "warm-japandi/C10.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\standard\\01_Warm_Japandi\\C10_Kitchen.png",
+      "sha256": "0968f56eb64ae9ad4f94c99f822b7d58f198738db4a7dacda22b2f2312992697"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C11",
+      "image": "warm-japandi/C11.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\standard\\01_Warm_Japandi\\C11_Bath_1.png",
+      "sha256": "8be8b55ba5c2a4eccb4b3569d2d7cb59f55e52edf47eb56dadf9737fe9d9d30d"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C12",
+      "image": "warm-japandi/C12.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\01_Warm_Japandi\\C12_Bath_2.png",
+      "sha256": "7fc5bff6757181ea9510a36502af912800ceaa63de54468b43765d5960dc2460"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C13",
+      "image": "warm-japandi/C13.webp",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\01_Warm_Japandi\\C13_Utility_Store_DIAGNOSTIC.png",
+      "sha256": "cfe53768056741d2ac64bdc0e4ef57d3ad0c70b2f08d6fe0da1d784f481daf31"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C14",
+      "image": "warm-japandi/C14.webp",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\01_Warm_Japandi\\C14_Yard_WC_Bin_DIAGNOSTIC.png",
+      "sha256": "b1ff10202c93ea920145b75b01a925284ddc670f45ca117ac042628b7d48a861"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C15",
+      "image": "warm-japandi/C15.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\standard\\01_Warm_Japandi\\C15_PES.png",
+      "sha256": "0e18f84be1c20822c526d65ee63a82464aae4e94383e136846528c2f6ad09262"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C16",
+      "image": "warm-japandi/C16.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\01_Warm_Japandi\\C16_Living_Evening.png",
+      "sha256": "d205d208c88ecc2d049e40ddde44a0bb2f5571e225dc5b50ab1258484fe9352d"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C17",
+      "image": "warm-japandi/C17.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\01_Warm_Japandi\\C17_Bath_1_Vanity_Supplement.png",
+      "sha256": "e27b2d3dc9a2de2899af2f68ed6c6da6e6d380a7b55bb70bd6cec11972cb5258"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C18",
+      "image": "warm-japandi/C18.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\01_Warm_Japandi\\C18_Yard_Eye_Supplement.png",
+      "sha256": "f7b94ca05b3e241142ca708ef356e0946be45f1043977be1f4006bb542190fb0"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C19",
+      "image": "warm-japandi/C19.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\01_Warm_Japandi\\C19_Service_WC_Supplement.png",
+      "sha256": "7ea79b13669b1be715bbb51675d3361a057c60ad217fd25877992040f40ddbad"
+    },
+    {
+      "style": "warm-japandi",
+      "camera": "C20",
+      "image": "warm-japandi/C20.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\01_Warm_Japandi\\C20_Bedroom_2_Reverse_Supplement.png",
+      "sha256": "89a39310922d84ffc358b163f308c581e30ea0374eb9ded0ef3479c479ead97b"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C01",
+      "image": "tropical-modern/C01.webp",
+      "dimensions": [
+        1280,
+        1000
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C01_Overview_Dollhouse.png",
+      "sha256": "6130a4ff2fb31bcb343d20970cd23d4fc6badfcae499b7012c4ff5ca92937128"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C02",
+      "image": "tropical-modern/C02.webp",
+      "dimensions": [
+        1120,
+        1280
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C02_Plan_Orthographic.png",
+      "sha256": "9b0c2b9850636d24d343a29f8873ad2cc5ac5fd25e0bdaaeecfc80b5b863499d"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C03",
+      "image": "tropical-modern/C03.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\standard\\02_Tropical_Modern\\C03_Living_Toward_PES.png",
+      "sha256": "f77d7bfcb9d0f4c56b5b502e4b47da7fe0cedc15ea6ecd333d0ef0f63e4b2973"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C04",
+      "image": "tropical-modern/C04.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C04_Living_Toward_Media.png",
+      "sha256": "53d17cfd026abbd7529e901ab91200b8bb51ffa87529ed2cf0411445e873886b"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C05",
+      "image": "tropical-modern/C05.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C05_Dining_Entry.png",
+      "sha256": "729bda4c8bb1e5c036778a97faea2c739e15307112e200ed37efc2e9b9c20e65"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C06",
+      "image": "tropical-modern/C06.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\standard\\02_Tropical_Modern\\C06_Master_Bed.png",
+      "sha256": "ab4d720ed8f869b6b0a338b2f7ba9380d7ad9bc9531fcae9553b2a73877a646f"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C07",
+      "image": "tropical-modern/C07.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C07_Master_Storage.png",
+      "sha256": "99cebacd6a92de950389948893c23ee0cdb8109ee1577253eea0d8ddf25334ea"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C08",
+      "image": "tropical-modern/C08.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C08_Bedroom_2.png",
+      "sha256": "fa659833791c3e32ba33858e564a1920dce8de81bbb95ccd8a3d80dd1289d573"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C09",
+      "image": "tropical-modern/C09.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C09_Bedroom_3.png",
+      "sha256": "ba84939ad1c8d7c4f3413b96ccd979178cd2b315f90aaf9650225d4bd3b08543"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C10",
+      "image": "tropical-modern/C10.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C10_Kitchen.png",
+      "sha256": "c54ebf05e07fa28b1668abf4ab8fec5fc3ad21e4f4afeba35d7f96177818365b"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C11",
+      "image": "tropical-modern/C11.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C11_Bath_1.png",
+      "sha256": "d12e9b71669e14b37f5b4fa0f184237cccf1fefb3d442bb51f6cf326841de65f"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C12",
+      "image": "tropical-modern/C12.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C12_Bath_2.png",
+      "sha256": "fd5e9301e1fe166e9bcf7089b9afe119a7ff3b03367d65fdad7e1880693bc457"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C13",
+      "image": "tropical-modern/C13.webp",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C13_Utility_Store_DIAGNOSTIC.png",
+      "sha256": "0f2011829bd03f816f1cd71375ae3505b7c0daa48ffc18e704c4b89ddf8cb391"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C14",
+      "image": "tropical-modern/C14.webp",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C14_Yard_WC_Bin_DIAGNOSTIC.png",
+      "sha256": "738ed35c9cc30fac8cad4a85b306dcb400164665223ad6e0dd3a6e2f700990f8"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C15",
+      "image": "tropical-modern/C15.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C15_PES.png",
+      "sha256": "7ec424bd35b4961b9508f774dbc73989bb07a285eec97e7d358e12df936dcd29"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C16",
+      "image": "tropical-modern/C16.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C16_Living_Evening.png",
+      "sha256": "78d0e31c8d88c3bed89d831574e66bb6e5098820e4937c7e7b8d14b00e727f13"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C17",
+      "image": "tropical-modern/C17.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C17_Bath_1_Vanity_Supplement.png",
+      "sha256": "b712db40668ba7ab3891904bb0c8902d1b58264356c57ef9eed021ecc34e0cee"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C18",
+      "image": "tropical-modern/C18.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C18_Yard_Eye_Supplement.png",
+      "sha256": "9ddc2da94820313b2aa5348dcae981e00a9d92402c7604be686aa0f125683026"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C19",
+      "image": "tropical-modern/C19.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C19_Service_WC_Supplement.png",
+      "sha256": "16d978922c3133676aef3d9a07f869ee60032f43b4e13839290eb2c3e46d6b26"
+    },
+    {
+      "style": "tropical-modern",
+      "camera": "C20",
+      "image": "tropical-modern/C20.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\02_Tropical_Modern\\C20_Bedroom_2_Reverse_Supplement.png",
+      "sha256": "5c6839e4d383d873215c38cdda637cc2f821c9fe4eded3af2ff49732d79f4f4d"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C01",
+      "image": "soft-contemporary/C01.webp",
+      "dimensions": [
+        1280,
+        1000
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C01_Overview_Dollhouse.png",
+      "sha256": "39dff9c52e352f1d94ac3287d4d95e36307b91e4959b3b8dec00ad7916b30c44"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C02",
+      "image": "soft-contemporary/C02.webp",
+      "dimensions": [
+        1120,
+        1280
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C02_Plan_Orthographic.png",
+      "sha256": "6a8c8910aaa11f8b3cc1900342874d0f128f55cd99e7c321b2126df616c14686"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C03",
+      "image": "soft-contemporary/C03.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\standard\\03_Soft_Contemporary\\C03_Living_Toward_PES.png",
+      "sha256": "fda85bbce8907490736c203fefd4ff25bf119cb4f5a027280d2e21f18642fa6e"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C04",
+      "image": "soft-contemporary/C04.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C04_Living_Toward_Media.png",
+      "sha256": "fc16bfd09f372879ee53c29b19a765297a9d38e8362dcace7dddcf4a8d89efa5"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C05",
+      "image": "soft-contemporary/C05.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C05_Dining_Entry.png",
+      "sha256": "2d899165720f745a538abeaf3654d7021d03302c7c98530ac851186ed3492fc2"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C06",
+      "image": "soft-contemporary/C06.webp",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "tier": "standard",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\standard\\03_Soft_Contemporary\\C06_Master_Bed.png",
+      "sha256": "dba19c268ae0449b494d8c2a15bde138c591cc4f738d4bfd27b76d9492499332"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C07",
+      "image": "soft-contemporary/C07.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C07_Master_Storage.png",
+      "sha256": "725edb11b0b4a0ccf7da96703951074815dacfcb61da7c65f7a46608b5540abb"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C08",
+      "image": "soft-contemporary/C08.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C08_Bedroom_2.png",
+      "sha256": "843ce13abfef2a430d1363f0ef8e0cb48d65579033bea250ec278acad6514cdc"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C09",
+      "image": "soft-contemporary/C09.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C09_Bedroom_3.png",
+      "sha256": "15083e6c6ccf19b814fe20f7db6d1f27ce3b1e46fbc66b7bab2c109c29a5bce8"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C10",
+      "image": "soft-contemporary/C10.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C10_Kitchen.png",
+      "sha256": "1c85a9d8bd48e8d09310d96c1a96ddc1ae2eb046b329b0d8405035e558c6bfaa"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C11",
+      "image": "soft-contemporary/C11.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C11_Bath_1.png",
+      "sha256": "dfea578fb08b898a6fdb27dc6ed01261d726ef06451759c9ec577a31c4d4a286"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C12",
+      "image": "soft-contemporary/C12.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C12_Bath_2.png",
+      "sha256": "a4261d7b46d5864b0dd4eeb36a1e37763885ae1bd42404b878939f3f4f5487dc"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C13",
+      "image": "soft-contemporary/C13.webp",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C13_Utility_Store_DIAGNOSTIC.png",
+      "sha256": "814ba15333254a7cc7693d6ce7b89c8f0cd6c0bec4d58cd68a3276f90825bda5"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C14",
+      "image": "soft-contemporary/C14.webp",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C14_Yard_WC_Bin_DIAGNOSTIC.png",
+      "sha256": "8400acd44971af5917d9a4fb9d4b4addf15d681538363815d232b0bd096df1fe"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C15",
+      "image": "soft-contemporary/C15.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C15_PES.png",
+      "sha256": "2228f52cb510e9835b447a009f24e08d9fc70c427d082e68c0259a87a4ccf1df"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C16",
+      "image": "soft-contemporary/C16.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C16_Living_Evening.png",
+      "sha256": "3168713fc8db9413378bf138f2ce36ec13e02581c4d5fb3a95f68078d03ca053"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C17",
+      "image": "soft-contemporary/C17.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C17_Bath_1_Vanity_Supplement.png",
+      "sha256": "3cd66f07c021dc52a19f259facd2dddd0340dcedaf4bad2dcffdfd47cf962301"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C18",
+      "image": "soft-contemporary/C18.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C18_Yard_Eye_Supplement.png",
+      "sha256": "9ca397747446ee42f93563a0dfe59660df3f0a57bcadd94ded2575618a725520"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C19",
+      "image": "soft-contemporary/C19.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C19_Service_WC_Supplement.png",
+      "sha256": "b4048c56a11f26164600bd69cbbe0ac786dd07b59b20a086809806c9bfd96a0f"
+    },
+    {
+      "style": "soft-contemporary",
+      "camera": "C20",
+      "image": "soft-contemporary/C20.webp",
+      "dimensions": [
+        1024,
+        576
+      ],
+      "tier": "preview",
+      "source": "deliverables\\20260905_155249_3e36c2\\renders\\preview\\03_Soft_Contemporary\\C20_Bedroom_2_Reverse_Supplement.png",
+      "sha256": "900e435262415f1bfac9b17e98b36c326669c1a649ecfa96f1e4ad6ec639726f"
+    }
+  ]
+}

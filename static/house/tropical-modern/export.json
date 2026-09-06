@@ -1,0 +1,11 @@
+{
+  "style": "tropical-modern",
+  "source_file": "Carissa_Park_02_Tropical_Modern.blend",
+  "source_sha256": "9a4e6d32eb897240fdc0feb7cc98a65d268bc0dd9697a05f8e40be373c1c4e0f",
+  "source_objects": 2289,
+  "exported_meshes": 52,
+  "bytes": 16625196,
+  "geometry": "Evaluated native geometry, no decimation",
+  "materials": "Base PBR values; native procedural grain/bump and Cycles illumination are represented by the separate renders",
+  "omitted": "Generic garden context, studio ground, lights, cameras, reference images"
+}
