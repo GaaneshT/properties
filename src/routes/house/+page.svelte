@@ -132,10 +132,10 @@
 </script>
 
 <svelte:head>
-	<title>House Studio · Carissa Park | Gaanesh</title>
+	<title>House Studio | Gaanesh</title>
 	<meta
 		name="description"
-		content="Explore Carissa Park through four furnished Blender concepts. Compare room renders and explore the native house geometry in an interactive 3D viewer."
+		content="Four furnished Blender concepts for one home. Compare room renders and explore the native house geometry in an interactive 3D viewer."
 	/>
 	<meta name="robots" content="noindex, nofollow" />
 	<meta name="theme-color" content="#101411" />
@@ -144,7 +144,7 @@
 <section class="house-studio" aria-labelledby="studio-title">
 	<header class="studio-heading">
 		<div>
-			<p class="eyebrow"><span></span> CARISSA PARK <b>/</b> HOUSE STUDIO</p>
+			<p class="eyebrow"><span></span> RENOVATION <b>/</b> HOUSE STUDIO</p>
 			<h1 id="studio-title">Your home. <em>Every possibility.</em></h1>
 			<p class="intro">Step inside your space. Find the feeling that makes it yours.</p>
 		</div>
@@ -194,7 +194,7 @@
 							<img
 								class="main-render"
 								src={imageUrl}
-								alt={`${selectedView.name}, ${selectedView.detail}, in ${selectedTheme.name}. Rendered from the Carissa Park Blender concept.`}
+								alt={`${selectedView.name}, ${selectedView.detail}, in ${selectedTheme.name}. Rendered from the native Blender concept.`}
 								fetchpriority="high"
 								onload={() => (imageLoading = false)}
 								onerror={() => {

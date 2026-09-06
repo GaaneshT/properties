@@ -118,7 +118,7 @@ bpy.ops.export_scene.gltf(filepath=str(out / 'house.glb'), export_format='GLB',
     export_yup=True, export_materials='EXPORT',export_texcoords=True)
 after = hashlib.sha256(native.read_bytes()).hexdigest()
 assert before == after, 'Native file was modified'
-report = dict(style=slug, source_file=native.name, source_sha256=before,
+report = dict(style=slug, source_sha256=before,
     source_objects=source_count, exported_meshes=len(target.objects),
     bytes=(out / 'house.glb').stat().st_size, geometry='Evaluated native geometry with subtle cloth/pillow surface refinement, no decimation',
     refined_textile_objects=len(refinements),

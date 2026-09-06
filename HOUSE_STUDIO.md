@@ -1,4 +1,4 @@
-# Carissa Park House Studio
+# House Studio
 
 The `/house` tab uses the owner's four finished native Blender projects. Dark Luxe is the default. The existing analytics pages retain their styling and static GitHub Pages build.
 
@@ -34,7 +34,7 @@ Prettier is pinned to 3.6.2 because the previous 3.8.4 resolution crashes while 
 
 ## Refresh from the native project
 
-The preparation scripts expect the sibling `Carissa_Park_Native` folder and its recorded final deliverable runs. They are local authoring tools; a web visitor does not need Python or Blender.
+The preparation scripts expect the sibling native project folder and its recorded final deliverable runs. They are local authoring tools; a web visitor does not need Python or Blender.
 
 Surfaces must be baked and packaged **before** exporting: `export_house.py` reads
 `static/house/<slug>/surfaces/manifest.json` to choose each face's tile size and grain
