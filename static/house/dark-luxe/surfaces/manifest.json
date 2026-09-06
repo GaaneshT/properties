@@ -1,0 +1,287 @@
+{
+  "tilePixels": 512,
+  "columns": 6,
+  "surfaces": [
+    {
+      "material": "CP_DL_Accent",
+      "role": "Accent",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 0,
+      "row": 0,
+      "index": 0,
+      "roughness": 0.8999999761581421
+    },
+    {
+      "material": "CP_DL_Bed_Velvet",
+      "role": "Bed_Velvet",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 1,
+      "row": 0,
+      "index": 1,
+      "roughness": 0.9300000071525574
+    },
+    {
+      "material": "CP_DL_Black_Marble",
+      "role": "Black_Marble",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 2,
+      "row": 0,
+      "index": 2,
+      "roughness": 0.3100000023841858
+    },
+    {
+      "material": "CP_DL_Cabinet",
+      "role": "Cabinet",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 3,
+      "row": 0,
+      "index": 3,
+      "roughness": 0.4399999976158142
+    },
+    {
+      "material": "CP_DL_Ceiling",
+      "role": "Ceiling",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 4,
+      "row": 0,
+      "index": 4,
+      "roughness": 0.8700000047683716
+    },
+    {
+      "material": "CP_DL_Drape",
+      "role": "Drape",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 5,
+      "row": 0,
+      "index": 5,
+      "roughness": 0.9399999976158142
+    },
+    {
+      "material": "CP_DL_Fabric",
+      "role": "Fabric",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 0,
+      "row": 1,
+      "index": 6,
+      "roughness": 0.9100000262260437
+    },
+    {
+      "material": "CP_DL_Fabric_Light",
+      "role": "Fabric_Light",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 1,
+      "row": 1,
+      "index": 7,
+      "roughness": 0.9399999976158142
+    },
+    {
+      "material": "CP_DL_Feature_Charcoal",
+      "role": "Feature_Charcoal",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 2,
+      "row": 1,
+      "index": 8,
+      "roughness": 0.8199999928474426
+    },
+    {
+      "material": "CP_DL_Floor_Stone",
+      "role": "Floor_Stone",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 3,
+      "row": 1,
+      "index": 9,
+      "roughness": 0.5400000214576721
+    },
+    {
+      "material": "CP_DL_Outdoor_Tile",
+      "role": "Outdoor_Tile",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 4,
+      "row": 1,
+      "index": 10,
+      "roughness": 0.8700000047683716
+    },
+    {
+      "material": "CP_DL_Paper",
+      "role": "Paper",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 5,
+      "row": 1,
+      "index": 11,
+      "roughness": 0.800000011920929
+    },
+    {
+      "material": "CP_DL_Patio_Cushion",
+      "role": "Patio_Cushion",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 0,
+      "row": 2,
+      "index": 12,
+      "roughness": 0.9599999785423279
+    },
+    {
+      "material": "CP_DL_Plaster",
+      "role": "Plaster",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 1,
+      "row": 2,
+      "index": 13,
+      "roughness": 0.8700000047683716
+    },
+    {
+      "material": "CP_DL_Rattan",
+      "role": "Rattan",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 2,
+      "row": 2,
+      "index": 14,
+      "roughness": 0.8799999952316284
+    },
+    {
+      "material": "CP_DL_Rug",
+      "role": "Rug",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 3,
+      "row": 2,
+      "index": 15,
+      "roughness": 0.9700000286102295
+    },
+    {
+      "material": "CP_DL_Service_Plaster",
+      "role": "Service_Plaster",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 4,
+      "row": 2,
+      "index": 16,
+      "roughness": 0.8500000238418579
+    },
+    {
+      "material": "CP_DL_Sofa_Cashmere",
+      "role": "Sofa_Cashmere",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 5,
+      "row": 2,
+      "index": 17,
+      "roughness": 0.9200000166893005
+    },
+    {
+      "material": "CP_DL_Stone",
+      "role": "Stone",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 0,
+      "row": 3,
+      "index": 18,
+      "roughness": 0.3100000023841858
+    },
+    {
+      "material": "CP_DL_Tile",
+      "role": "Tile",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 1,
+      "row": 3,
+      "index": 19,
+      "roughness": 0.46000000834465027
+    },
+    {
+      "material": "CP_DL_Towel",
+      "role": "Towel",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 2,
+      "row": 3,
+      "index": 20,
+      "roughness": 0.9599999785423279
+    },
+    {
+      "material": "CP_DL_Trim",
+      "role": "Trim",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 3,
+      "row": 3,
+      "index": 21,
+      "roughness": 0.800000011920929
+    },
+    {
+      "material": "CP_DL_Wood_Dark_X",
+      "role": "Wood_Dark",
+      "grainAxis": "X",
+      "tileMetres": 1.0,
+      "column": 4,
+      "row": 3,
+      "index": 22,
+      "roughness": 0.47999998927116394
+    },
+    {
+      "material": "CP_DL_Wood_Dark_Y",
+      "role": "Wood_Dark",
+      "grainAxis": "Y",
+      "tileMetres": 1.0,
+      "column": 5,
+      "row": 3,
+      "index": 23,
+      "roughness": 0.47999998927116394
+    },
+    {
+      "material": "CP_DL_Wood_Dark_Z",
+      "role": "Wood_Dark",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 0,
+      "row": 4,
+      "index": 24,
+      "roughness": 0.47999998927116394
+    },
+    {
+      "material": "CP_DL_Wood_X",
+      "role": "Wood",
+      "grainAxis": "X",
+      "tileMetres": 1.0,
+      "column": 1,
+      "row": 4,
+      "index": 25,
+      "roughness": 0.4300000071525574
+    },
+    {
+      "material": "CP_DL_Wood_Y",
+      "role": "Wood",
+      "grainAxis": "Y",
+      "tileMetres": 1.0,
+      "column": 2,
+      "row": 4,
+      "index": 26,
+      "roughness": 0.4300000071525574
+    },
+    {
+      "material": "CP_DL_Wood_Z",
+      "role": "Wood",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 3,
+      "row": 4,
+      "index": 27,
+      "roughness": 0.4300000071525574
+    }
+  ],
+  "sourceHash": "5cb20f2903b7e0eca07bf120837d10f0dc48b58627a63e50dcd7df99a3b2c3a4"
+}

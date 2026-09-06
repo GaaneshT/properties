@@ -4,8 +4,9 @@
   "source_sha256": "cc9b6cd29e71a71378896203b0d4a75d03dea18d3aaa4c4ded9b6e86ae21feeb",
   "source_objects": 2054,
   "exported_meshes": 52,
-  "bytes": 16623100,
-  "geometry": "Evaluated native geometry, no decimation",
-  "materials": "Base PBR values; native procedural grain/bump and Cycles illumination are represented by the separate renders",
+  "bytes": 21252932,
+  "geometry": "Evaluated native geometry with subtle cloth/pillow surface refinement, no decimation",
+  "refined_textile_objects": 22,
+  "materials": "Base PBR values plus metric SurfaceUV coordinates. Native shader albedo/normal maps are loaded from the companion surfaces manifest by the viewer.",
   "omitted": "Generic garden context, studio ground, lights, cameras, reference images"
 }

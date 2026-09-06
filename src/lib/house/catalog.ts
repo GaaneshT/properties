@@ -29,6 +29,13 @@ export const themes = [
 export type ThemeId = (typeof themes)[number]['id'];
 export type ViewMode = 'render' | 'compare' | 'explore';
 export const views = [
+	{
+		id: 'C01',
+		name: 'Whole house',
+		detail: 'Complete furnished overview',
+		group: 'Overview',
+		kind: 'cutaway'
+	},
 	{ id: 'C03', name: 'Living room', detail: 'Toward the patio', group: 'Living', kind: 'day' },
 	{ id: 'C04', name: 'Living room', detail: 'Media wall', group: 'Living', kind: 'day' },
 	{
@@ -111,13 +118,6 @@ export const views = [
 		name: 'Yard, WC & bin',
 		detail: 'Service cutaway',
 		group: 'Outdoor & service',
-		kind: 'cutaway'
-	},
-	{
-		id: 'C01',
-		name: 'Whole house',
-		detail: 'Dollhouse overview',
-		group: 'Overview',
 		kind: 'cutaway'
 	},
 	{ id: 'C02', name: 'Floor plan', detail: 'Furnished plan', group: 'Overview', kind: 'plan' }

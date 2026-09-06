@@ -14,7 +14,8 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint ."
+		"lint": "prettier --check . && eslint .",
+		"test:house": "node --experimental-strip-types scripts/test_house_navigation.mjs && node scripts/verify_house.mjs"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",

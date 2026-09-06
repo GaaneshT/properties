@@ -1,0 +1,20 @@
+{
+  "source_native_sha256": "9d7c075930e97881a60711d4de86bb97ce6cff5608cc2cbf10f9013ae2007ef2",
+  "source_render_sha256": "6223fe8c8bf48cb61c98e76df50fdfebc328cac5b113e74045a7b2e1516f0dd0",
+  "camera_location": [
+    9,
+    -13.5,
+    32
+  ],
+  "target": [
+    5.75,
+    7,
+    0.35
+  ],
+  "ortho_scale": 21.4,
+  "dimensions": [
+    1920,
+    1500
+  ],
+  "refinements": "Dark studio backdrop, refitted whole-house camera, subtle drape and cushion shaping; native files unchanged"
+}

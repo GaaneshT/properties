@@ -1,0 +1,207 @@
+{
+  "tilePixels": 512,
+  "columns": 5,
+  "surfaces": [
+    {
+      "material": "CP_Accent",
+      "role": "Accent",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 0,
+      "row": 0,
+      "index": 0,
+      "roughness": 0.8799999952316284
+    },
+    {
+      "material": "CP_Cabinet",
+      "role": "Cabinet",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 1,
+      "row": 0,
+      "index": 1,
+      "roughness": 0.5600000023841858
+    },
+    {
+      "material": "CP_Fabric",
+      "role": "Fabric",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 2,
+      "row": 0,
+      "index": 2,
+      "roughness": 0.9100000262260437
+    },
+    {
+      "material": "CP_Fabric_Light",
+      "role": "Fabric_Light",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 3,
+      "row": 0,
+      "index": 3,
+      "roughness": 0.9200000166893005
+    },
+    {
+      "material": "CP_Floor_Stone",
+      "role": "Floor_Stone",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 4,
+      "row": 0,
+      "index": 4,
+      "roughness": 0.6399999856948853
+    },
+    {
+      "material": "CP_Outdoor_Tile",
+      "role": "Outdoor_Tile",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 0,
+      "row": 1,
+      "index": 5,
+      "roughness": 0.8700000047683716
+    },
+    {
+      "material": "CP_Paper",
+      "role": "Paper",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 1,
+      "row": 1,
+      "index": 6,
+      "roughness": 0.8600000143051147
+    },
+    {
+      "material": "CP_Plaster",
+      "role": "Plaster",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 2,
+      "row": 1,
+      "index": 7,
+      "roughness": 0.8700000047683716
+    },
+    {
+      "material": "CP_Rattan",
+      "role": "Rattan",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 3,
+      "row": 1,
+      "index": 8,
+      "roughness": 0.8500000238418579
+    },
+    {
+      "material": "CP_Rug",
+      "role": "Rug",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 4,
+      "row": 1,
+      "index": 9,
+      "roughness": 0.9800000190734863
+    },
+    {
+      "material": "CP_Stone",
+      "role": "Stone",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 0,
+      "row": 2,
+      "index": 10,
+      "roughness": 0.3700000047683716
+    },
+    {
+      "material": "CP_Tile",
+      "role": "Tile",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 1,
+      "row": 2,
+      "index": 11,
+      "roughness": 0.47999998927116394
+    },
+    {
+      "material": "CP_Towel",
+      "role": "Towel",
+      "grainAxis": "Z",
+      "tileMetres": 0.25,
+      "column": 2,
+      "row": 2,
+      "index": 12,
+      "roughness": 0.949999988079071
+    },
+    {
+      "material": "CP_Trim",
+      "role": "Trim",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 3,
+      "row": 2,
+      "index": 13,
+      "roughness": 0.699999988079071
+    },
+    {
+      "material": "CP_Wood_Dark_X",
+      "role": "Wood_Dark",
+      "grainAxis": "X",
+      "tileMetres": 1.0,
+      "column": 4,
+      "row": 2,
+      "index": 14,
+      "roughness": 0.5199999809265137
+    },
+    {
+      "material": "CP_Wood_Dark_Y",
+      "role": "Wood_Dark",
+      "grainAxis": "Y",
+      "tileMetres": 1.0,
+      "column": 0,
+      "row": 3,
+      "index": 15,
+      "roughness": 0.5199999809265137
+    },
+    {
+      "material": "CP_Wood_Dark_Z",
+      "role": "Wood_Dark",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 1,
+      "row": 3,
+      "index": 16,
+      "roughness": 0.5199999809265137
+    },
+    {
+      "material": "CP_Wood_X",
+      "role": "Wood",
+      "grainAxis": "X",
+      "tileMetres": 1.0,
+      "column": 2,
+      "row": 3,
+      "index": 17,
+      "roughness": 0.4699999988079071
+    },
+    {
+      "material": "CP_Wood_Y",
+      "role": "Wood",
+      "grainAxis": "Y",
+      "tileMetres": 1.0,
+      "column": 3,
+      "row": 3,
+      "index": 18,
+      "roughness": 0.4699999988079071
+    },
+    {
+      "material": "CP_Wood_Z",
+      "role": "Wood",
+      "grainAxis": "Z",
+      "tileMetres": 1.0,
+      "column": 4,
+      "row": 3,
+      "index": 19,
+      "roughness": 0.4699999988079071
+    }
+  ],
+  "sourceHash": "9d7c075930e97881a60711d4de86bb97ce6cff5608cc2cbf10f9013ae2007ef2"
+}

@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import { replaceState } from '$app/navigation';
 	import HouseViewer from '$lib/components/HouseViewer.svelte';
+	import type { NavigationMode } from '$lib/house/navigation';
 	import {
 		themes,
 		views,
@@ -16,7 +17,8 @@
 	} from '$lib/house/catalog';
 	let theme = $state<ThemeId>('dark-luxe');
 	let comparison = $state<ThemeId>('warm-japandi');
-	let camera = $state<CameraId>('C03');
+	let camera = $state<CameraId>('C01');
+	let navigation = $state<NavigationMode>('orbit');
 	let mode = $state<ViewMode>('render');
 	let group = $state('All spaces');
 	let split = $state(50);
@@ -46,6 +48,11 @@
 		if (isCamera(savedCamera)) camera = savedCamera;
 		if (isTheme(savedComparison)) comparison = savedComparison;
 		if (['render', 'compare', 'explore'].includes(savedMode ?? '')) mode = savedMode as ViewMode;
+		navigation =
+			params.get('navigation') === 'walk' ||
+			(mode === 'explore' && !['C01', 'C02', 'C13', 'C14'].includes(camera))
+				? 'walk'
+				: 'orbit';
 		if (comparison === theme) comparison = themes.find((item) => item.id !== theme)!.id;
 		ready = true;
 		const changed = () => {
@@ -60,6 +67,8 @@
 		url.searchParams.set('theme', theme);
 		url.searchParams.set('view', camera);
 		url.searchParams.set('mode', mode);
+		if (mode === 'explore') url.searchParams.set('navigation', navigation);
+		else url.searchParams.delete('navigation');
 		if (mode === 'compare') url.searchParams.set('with', comparison);
 		else url.searchParams.delete('with');
 		// This URL already includes the deployed base path; resolving it again would duplicate it.
@@ -78,9 +87,27 @@
 		if (comparison === next) comparison = theme;
 		theme = next;
 	}
+	function chooseCamera(id: CameraId) {
+		camera = id;
+		navigation = ['C01', 'C02', 'C13', 'C14'].includes(id) ? 'orbit' : 'walk';
+	}
+	function goOverview() {
+		camera = 'C01';
+		navigation = 'orbit';
+		mode = 'explore';
+	}
+	function goWalking() {
+		if (['C01', 'C02', 'C13', 'C14'].includes(camera)) camera = 'C03';
+		navigation = 'walk';
+		mode = 'explore';
+	}
+	function openExplorer() {
+		chooseCamera(camera);
+		mode = 'explore';
+	}
 	function step(direction: number) {
 		const index = views.findIndex((item) => item.id === camera);
-		camera = views[(index + direction + views.length) % views.length].id;
+		chooseCamera(views[(index + direction + views.length) % views.length].id);
 		group = 'All spaces';
 	}
 	async function toggleFullscreen() {
@@ -144,7 +171,7 @@
 					<button
 						class:active={mode === 'explore'}
 						aria-pressed={mode === 'explore'}
-						onclick={() => (mode = 'explore')}><span class="cube">◇</span> Explore 3D</button
+						onclick={openExplorer}><span class="cube">◇</span> Explore 3D</button
 					>
 				</div>
 				<button class="expand-button" onclick={toggleFullscreen} aria-label="Enter fullscreen"
@@ -153,7 +180,14 @@
 			</div>
 			<div class="stage" class:in-fullscreen={fullscreen} bind:this={stage}>
 				{#if mode === 'explore'}
-					<HouseViewer {theme} {camera} onfallback={() => (mode = 'render')} />
+					<HouseViewer
+						{theme}
+						{camera}
+						{navigation}
+						onfallback={() => (mode = 'render')}
+						onoverview={goOverview}
+						onwalk={goWalking}
+					/>
 				{:else}
 					{#key imageUrl + secondaryUrl + imageAttempt}
 						<div class="render-frame" class:portrait={camera === 'C02'} aria-busy={imageLoading}>
@@ -202,6 +236,9 @@
 								</div>{/if}
 						</div>
 					{/key}
+					{#if mode === 'render'}<button class="enter-house" onclick={goWalking}
+							>Walk inside ↗</button
+						>{/if}
 				{/if}
 				{#if fullscreen}<button class="exit-fullscreen" onclick={toggleFullscreen}
 						>Close fullscreen ×</button
@@ -231,7 +268,9 @@
 			<div class="view-info">
 				<p>
 					<span class="small-dot"></span>{mode === 'explore'
-						? 'Native geometry · real-time browser lighting and base materials'
+						? navigation === 'walk'
+							? 'Walk through your home · choose a room below to jump there'
+							: 'Whole-house view · textured furniture and soft shadows'
 						: mode === 'compare'
 							? 'Same camera & render tier · slide to compare finishes'
 							: 'Native Blender render · original framing & colour treatment'}
@@ -293,7 +332,7 @@
 					class="room-card"
 					class:selected={camera === item.id}
 					aria-pressed={camera === item.id}
-					onclick={() => (camera = item.id)}
+					onclick={() => chooseCamera(item.id)}
 					><div class="room-image">
 						<img src={asset(theme, item.id, '-thumb')} alt="" loading="lazy" /><span
 							>{item.kind === 'evening'
@@ -311,14 +350,6 @@
 	</section>
 
 	<div class="studio-footnote">
-		<div>
-			<span class="note-icon">◇</span>
-			<p>
-				<strong>Built from your Blender concepts.</strong> Geometry and camera views come from the four
-				native Carissa Park projects. Dimensions and finishes are unverified concepts. Renders offer
-				the closest match to Blender; interactive materials and lighting are approximations.
-			</p>
-		</div>
 		<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 		<a href={asset(theme, camera)} target="_blank" rel="noreferrer">Open full render ↗</a>
 	</div>
@@ -808,29 +839,11 @@
 	.studio-footnote {
 		display: flex;
 		gap: 26px;
-		justify-content: space-between;
+		justify-content: flex-end;
 		align-items: center;
 		padding: 22px 0;
 		margin-top: 12px;
 		border-top: 1px solid var(--line);
-	}
-	.studio-footnote > div {
-		display: flex;
-		gap: 14px;
-		max-width: 800px;
-	}
-	.note-icon {
-		color: #a3ad91;
-		font-size: 20px;
-	}
-	.studio-footnote p {
-		color: #9ca58e;
-		font-size: 10px;
-		line-height: 1.8;
-	}
-	.studio-footnote strong {
-		color: #c8ceba;
-		font-weight: 400;
 	}
 	.studio-footnote a {
 		color: #c6ad80;
@@ -948,6 +961,23 @@
 	.stage.in-fullscreen {
 		width: 100vw;
 		height: 100vh;
+	}
+	.stage.in-fullscreen :global(.travel-switch) {
+		top: 66px;
+	}
+	.enter-house {
+		position: absolute;
+		right: 24px;
+		bottom: 28px;
+		z-index: 4;
+		padding: 10px 16px;
+		background: #1b2319ed;
+		border: 1px solid #c5ab7c85;
+		color: #e8d1a4;
+		font-size: 12px;
+	}
+	.enter-house:hover {
+		background: #3b402e;
 	}
 	.exit-fullscreen {
 		position: absolute;
