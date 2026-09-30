@@ -7,9 +7,12 @@
 	let { dists, height = 240, bins = 12 }: { dists: Dist[]; height?: number; bins?: number } =
 		$props();
 
-	const PAD = { top: 12, right: 12, bottom: 30, left: 40 };
-	const W = 720;
-	const H = $derived(height);
+	const PAD = { top: 12, right: 12, bottom: 30, left: 12 };
+
+	// Drawn at the container's real width so labels stay legible on a phone.
+	let cw = $state(0);
+	const W = $derived(Math.max(280, cw || 720));
+	const H = $derived(Math.round(Math.min(height, Math.max(200, W * 0.5))));
 
 	const allValues = $derived(dists.flatMap((d) => d.values));
 	const min = $derived(allValues.length ? Math.min(...allValues) : 0);
@@ -43,22 +46,16 @@
 	const plotW = $derived(W - PAD.left - PAD.right);
 	const groupW = $derived(plotW / n);
 	const barW = $derived((groupW * 0.8) / Math.max(1, dists.length));
+	// Label every 3rd edge on wide charts, every 4th on narrow ones.
+	const labelEvery = $derived(W < 520 ? 4 : 3);
 
-	const sy = (count: number) =>
-		H - PAD.bottom - (count / maxCount) * (H - PAD.top - PAD.bottom);
+	const sy = (count: number) => H - PAD.bottom - (count / maxCount) * (H - PAD.top - PAD.bottom);
 </script>
 
-<div class="w-full">
-	<svg viewBox="0 0 {W} {H}" class="h-auto w-full" role="img" aria-label="PSF distribution">
+<div class="w-full" bind:clientWidth={cw}>
+	<svg viewBox="0 0 {W} {H}" width={W} height={H} class="chart block h-auto w-full" role="img" aria-label="PSF distribution">
 		<!-- Baseline -->
-		<line
-			x1={PAD.left}
-			x2={W - PAD.right}
-			y1={H - PAD.bottom}
-			y2={H - PAD.bottom}
-			stroke="var(--color-ink-600)"
-			stroke-opacity="0.4"
-		/>
+		<line x1={PAD.left} x2={W - PAD.right} y1={H - PAD.bottom} y2={H - PAD.bottom} stroke="var(--rule2)" />
 
 		{#each binned as d, di}
 			{#each d.counts as c, bi}
@@ -69,7 +66,7 @@
 						width={Math.max(1, barW - 1)}
 						height={H - PAD.bottom - sy(c)}
 						fill={d.color}
-						fill-opacity="0.8"
+						fill-opacity="0.85"
 						rx="1"
 					>
 						<title>{d.label}: {c} txns @ {fmtPsf(edges[bi])}–{fmtPsf(edges[bi + 1])} psf</title>
@@ -78,16 +75,15 @@
 			{/each}
 		{/each}
 
-		<!-- X axis labels: a few bin edges -->
+		<!-- X axis labels: a few bin edges, kept inside the frame -->
 		{#each edges as e, i}
-			{#if i % 3 === 0 || i === edges.length - 1}
+			{#if i % labelEvery === 0 || i === edges.length - 1}
 				<text
 					x={PAD.left + i * groupW}
 					y={H - 10}
-					text-anchor="middle"
-					font-family="JetBrains Mono"
+					text-anchor={i === 0 ? 'start' : i === edges.length - 1 ? 'end' : 'middle'}
 					font-size="12"
-					fill="var(--color-ghost-400)">{fmtPsf(e)}</text
+					fill="var(--faint)">{fmtPsf(e)}</text
 				>
 			{/if}
 		{/each}

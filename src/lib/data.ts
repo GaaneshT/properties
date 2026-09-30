@@ -196,13 +196,16 @@ export const CATEGORY_LABELS: Record<Category, string> = {
 };
 
 // ── Comparison palette ───────────────────────────────────────────────────────
+// Ordered for categorical use and distinguishable in greyscale. Tokens live in
+// app.css (--series-1…6); the first is the pen blue because the first pick is
+// usually the project being studied.
 export const SERIES_COLORS = [
-	'var(--color-neon-cyan)',
-	'var(--color-neon-violet)',
-	'var(--color-neon-amber)',
-	'var(--color-neon-rose)',
-	'var(--color-neon-green)',
-	'var(--color-neon-teal)'
+	'var(--series-1)',
+	'var(--series-2)',
+	'var(--series-3)',
+	'var(--series-4)',
+	'var(--series-5)',
+	'var(--series-6)'
 ];
 export const colorFor = (i: number) => SERIES_COLORS[i % SERIES_COLORS.length];
 export const MAX_COMPARE = 6;

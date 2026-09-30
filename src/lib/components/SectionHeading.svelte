@@ -1,21 +1,32 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+
+	// Title, an optional count in the margin, and a hairline to the edge. The
+	// count carries state (e.g. "3 of 6 selected"), so it sits beside the
+	// heading rather than above it.
 	let {
 		title,
-		kicker = null,
+		count = null,
+		id = undefined,
+		actions,
 		children
 	}: {
 		title: string;
-		kicker?: string | null;
-		children?: import('svelte').Snippet;
+		count?: string | null;
+		id?: string;
+		actions?: Snippet;
+		children?: Snippet;
 	} = $props();
 </script>
 
-<div class="flex flex-col gap-1">
-	{#if kicker}
-		<span class="text-[13px] font-semibold tracking-[0.02em] text-ghost-600 uppercase">{kicker}</span>
-	{/if}
-	<h2 class="text-xl font-semibold text-ink-900">{title}</h2>
+<div>
+	<div class="grouphead">
+		<h2 class="y" {id}>{title}</h2>
+		{#if count}<span class="n" aria-live="polite">{count}</span>{/if}
+		<span class="ln" aria-hidden="true"></span>
+		{#if actions}{@render actions()}{/if}
+	</div>
 	{#if children}
-		<p class="max-w-2xl text-[15px] text-ink-700">{@render children()}</p>
+		<p class="mt-2 max-w-[38em] text-[15px] text-ink-700">{@render children()}</p>
 	{/if}
 </div>

@@ -67,170 +67,182 @@
 	});
 
 	const visible = $derived(filtered.slice(0, ROW_CAP));
+
+	const historyHref = (project: string) => `${base}/?sel=${encodeURIComponent(project)}&tab=txns`;
+
+	// Shared control styles: the system's 3px field and 4px panel.
+	const panel = 'rounded-[4px] border border-ghost-200 bg-ghost-50';
+	const field = 'w-full rounded-[3px] border border-ghost-300 bg-ghost-50 px-3 py-2 text-sm text-ink-900';
+	const fieldLabel = 'mb-1 block text-[12.5px] font-medium text-ghost-600';
+	const th = 'border-b border-ghost-300 px-3 py-3 align-bottom font-display text-[13px] leading-tight font-semibold text-ink-700';
+	const td = 'border-b border-ghost-200 px-3 py-2.5';
 </script>
 
 <svelte:head>
 	<title>Recent transactions · properties.gaanesh.com</title>
 </svelte:head>
 
-<section class="space-y-2">
-	<span class="text-[13px] font-semibold tracking-[0.02em] text-ghost-600 uppercase">URA caveats</span>
-	<h1 class="text-3xl font-semibold text-ink-900 dark:text-white">Recent transactions</h1>
-	<p class="max-w-2xl text-sm text-ink-600 dark:text-ghost-300">
+<div class="phead">
+	<h1>Recent transactions</h1>
+	<p>
 		The latest private-residential caveats lodged with URA, market-wide. URA dates caveats by month,
 		so these are ordered by most recent month{meta?.recentLatest ? ` (latest: ${fmtMonth(meta.recentLatest)})` : ''}.
 	</p>
-	<p class="max-w-2xl text-xs text-ghost-500">
-		This is a market-wide snapshot of the most recent months only, so searching one project here
-		shows just its latest sales. For a project's <strong>full 60-month transaction history</strong>,
-		open <a href="{base}/" class="text-neon-cyan hover:underline">Analytics</a>, search the project,
-		tick it, and use the “All transactions” tab.
+</div>
+
+<div class="caveat">
+	<p>
+		This is a market-wide snapshot of the most recent months only, so searching one project here shows
+		just its latest sales. For a project's <b>full 60-month transaction history</b>, open
+		<a href="{base}/" class="lnk">Overview</a>, search the project, tick it, and use the “All
+		transactions” tab.
 	</p>
-</section>
+</div>
 
 {#if loading}
-	<div class="rounded-2xl border border-ghost-200/60 bg-white/85 p-8 text-center text-sm text-ghost-500 dark:border-ink-600/60 dark:bg-ink-900/60">
-		Loading recent transactions…
-	</div>
+	<p class="{panel} mt-10 p-8 text-center text-[15px] text-ghost-600" role="status">Loading recent transactions…</p>
 {:else if loadError}
-	<div class="rounded-2xl border border-neon-rose/40 bg-neon-rose/5 p-6 text-sm text-neon-rose">
-		Couldn't load data: {loadError}
+	<div class="mt-10 rounded-[3px] border border-l-[3px] border-ghost-200 border-l-neon-rose bg-ghost-50 px-[22px] py-[18px]" role="alert">
+		<p class="text-[15.5px] leading-relaxed text-ink-700">
+			<b class="font-semibold text-neon-rose">Couldn't load recent transactions.</b>
+			{loadError}. Reload the page to try again.
+		</p>
 	</div>
 {:else}
 	<!-- Filters -->
-	<section class="rounded-2xl border border-ghost-200/60 bg-white/85 p-4 dark:border-ink-600/60 dark:bg-ink-900/60">
+	<section class="{panel} mt-10 p-4 sm:p-5" aria-label="Filters">
 		<div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:flex lg:flex-wrap lg:items-end">
 			<label class="col-span-2 sm:col-span-3 lg:min-w-[220px] lg:flex-1">
-				<span class="mb-1 block text-xs font-medium text-ghost-500">Search project or street</span>
-				<input type="search" bind:value={search} placeholder="e.g. Clematis, Bedok…" class="w-full rounded-lg border border-ghost-200/70 bg-white px-3 py-2 text-sm text-ink-900 dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100" />
+				<span class={fieldLabel}>Search project or street</span>
+				<input type="search" bind:value={search} placeholder="e.g. Clematis, Bedok…" class={field} />
 			</label>
-			<label>
-				<span class="mb-1 block text-xs font-medium text-ghost-500">Type</span>
-				<select bind:value={category} class="w-full rounded-lg border border-ghost-200/70 bg-white px-3 py-2 text-sm lg:w-auto dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100">
+			<label class="lg:shrink-0">
+				<span class={fieldLabel}>Type</span>
+				<select bind:value={category} class="{field} pr-9 lg:w-auto">
 					<option value="all">All types</option>
 					<option value="condo">Condo / Apartment</option>
 					<option value="ec">Executive Condo</option>
 					<option value="landed">Landed</option>
 				</select>
 			</label>
-			<label>
-				<span class="mb-1 block text-xs font-medium text-ghost-500">Region</span>
-				<select bind:value={region} class="w-full rounded-lg border border-ghost-200/70 bg-white px-3 py-2 text-sm lg:w-auto dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100">
+			<label class="lg:shrink-0">
+				<span class={fieldLabel}>Region</span>
+				<select bind:value={region} class="{field} pr-9 lg:w-auto">
 					<option value="all">All regions</option>
 					<option value="CCR">CCR · Core Central</option>
 					<option value="RCR">RCR · Rest of Central</option>
 					<option value="OCR">OCR · Outside Central</option>
 				</select>
 			</label>
-			<label>
-				<span class="mb-1 block text-xs font-medium text-ghost-500">District</span>
-				<select bind:value={district} class="w-full rounded-lg border border-ghost-200/70 bg-white px-3 py-2 text-sm lg:w-auto dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100">
+			<label class="lg:shrink-0">
+				<span class={fieldLabel}>District</span>
+				<select bind:value={district} class="{field} pr-9 lg:w-auto">
 					<option value="all">All</option>
 					{#each districts as d}<option value={d}>D{d}</option>{/each}
 				</select>
 			</label>
-			<label>
-				<span class="mb-1 block text-xs font-medium text-ghost-500">Sale type</span>
-				<select bind:value={saleType} class="w-full rounded-lg border border-ghost-200/70 bg-white px-3 py-2 text-sm lg:w-auto dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100">
+			<label class="lg:shrink-0">
+				<span class={fieldLabel}>Sale type</span>
+				<select bind:value={saleType} class="{field} pr-9 lg:w-auto">
 					<option value="all">All sales</option>
 					<option value="3">Resale</option>
 					<option value="1">New sale</option>
 					<option value="2">Sub-sale</option>
 				</select>
 			</label>
-			<label>
-				<span class="mb-1 block text-xs font-medium text-ghost-500">Sort by</span>
-				<select bind:value={sortBy} class="w-full rounded-lg border border-ghost-200/70 bg-white px-3 py-2 text-sm lg:w-auto dark:border-ink-600/70 dark:bg-ink-950/70 dark:text-ghost-100">
+			<label class="lg:shrink-0">
+				<span class={fieldLabel}>Sort by</span>
+				<select bind:value={sortBy} class="{field} pr-9 lg:w-auto">
 					<option value="date">Most recent</option>
 					<option value="price">Highest price</option>
 					<option value="psf">Highest PSF</option>
 				</select>
 			</label>
 		</div>
-		<p class="mt-3 text-xs text-ghost-500">
+		<p class="tabular mt-4 text-[13px] text-ghost-600">
 			Showing {Math.min(visible.length, filtered.length)} of {filtered.length.toLocaleString()} transactions
 			{#if filtered.length > ROW_CAP}· refine filters to narrow{/if}
 		</p>
 	</section>
 
-	<!-- Cards (mobile/tablet) -->
-	<section class="space-y-2 lg:hidden">
+	<!-- Transaction list (mobile/tablet) -->
+	<ul class="{panel} mt-5 lg:hidden" aria-label="Transactions">
 		{#each visible as r, i (i)}
-			<div class="rounded-xl border border-ghost-200/60 bg-white/85 p-3 dark:border-ink-600/60 dark:bg-ink-900/60">
-				<div class="flex items-start justify-between gap-2">
+			<li class="border-b border-ghost-200 px-4 py-3.5 last:border-b-0">
+				<div class="flex items-start justify-between gap-3">
 					<div class="min-w-0">
 						<a
-							href="{base}/?sel={encodeURIComponent(r.project)}&tab=txns"
-							class="block truncate font-medium text-ink-900 hover:text-neon-cyan dark:text-white dark:hover:text-neon-cyan"
-							title="View full transaction history"
-						>{r.project}</a>
-						<div class="truncate text-xs text-ghost-500">{r.street} · D{r.district} · {r.region}</div>
+							href={historyHref(r.project)}
+							class="block truncate font-medium text-ink-900 transition hover:text-neon-cyan"
+							title="View full transaction history">{r.project}</a
+						>
+						<div class="truncate text-[12.5px] text-ghost-600">{r.street} · D{r.district} · {r.region}</div>
 					</div>
-					<div class="shrink-0 text-right">
-						<div class="font-semibold text-ink-900 dark:text-white">{fmtPriceFull(r.price)}</div>
-						<div class="text-xs text-ghost-500">{fmtMonth(r.date)}</div>
+					<div class="tabular shrink-0 text-right">
+						<div class="font-semibold text-ink-900">{fmtPriceFull(r.price)}</div>
+						<div class="text-[12.5px] text-ghost-600">{fmtMonth(r.date)}</div>
 					</div>
 				</div>
-				<div class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ghost-600 dark:text-ghost-300">
+				<div class="tabular mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[12.5px] text-ink-700">
 					<span>{fmtPsf(r.psf)} psf</span>
 					<span>{fmtArea(r.areaSqft)}</span>
 					<span>Floor {r.floorRange || '—'}</span>
 					<span>{SALE_LABELS[r.typeOfSale as SaleCode] ?? '—'}</span>
 					<span>{r.tenureClass}</span>
 				</div>
-			</div>
+			</li>
 		{/each}
 		{#if visible.length === 0}
-			<p class="rounded-xl border border-ghost-200/60 p-6 text-center text-sm text-ghost-500 dark:border-ink-600/60">No transactions match these filters.</p>
+			<li class="p-6 text-center text-[15px] text-ghost-600">No transactions match these filters.</li>
 		{/if}
-	</section>
+	</ul>
 
 	<!-- Table (desktop) -->
-	<section class="hidden max-h-[64vh] overflow-auto rounded-2xl border border-ghost-200/60 bg-white/85 lg:block dark:border-ink-600/60 dark:bg-ink-900/60">
-		<table class="w-full text-sm">
-			<thead class="sticky top-0 z-10 border-b border-ghost-200/60 bg-white/95 text-left text-xs uppercase tracking-wide text-ghost-500 backdrop-blur dark:border-ink-600/60 dark:bg-ink-900/95">
+	<section class="scroller {panel} mt-5 hidden max-h-[64vh] overflow-auto lg:block" aria-label="Transactions">
+		<table class="w-full border-separate border-spacing-0 text-sm">
+			<thead class="sticky top-0 z-10 bg-ghost-50 text-left">
 				<tr>
-					<th class="px-3 py-3 font-medium">Month</th>
-					<th class="px-3 py-3 font-medium">Project</th>
-					<th class="px-3 py-3 font-medium">Price</th>
-					<th class="px-3 py-3 font-medium">PSF</th>
-					<th class="px-3 py-3 font-medium">Size</th>
-					<th class="px-3 py-3 font-medium">Floor</th>
-					<th class="px-3 py-3 font-medium">Sale</th>
-					<th class="px-3 py-3 font-medium">District</th>
-					<th class="px-3 py-3 font-medium">Tenure</th>
+					<th scope="col" class={th}>Month</th>
+					<th scope="col" class={th}>Project</th>
+					<th scope="col" class="{th} text-right">Price</th>
+					<th scope="col" class="{th} text-right">PSF</th>
+					<th scope="col" class="{th} text-right">Size</th>
+					<th scope="col" class={th}>Floor</th>
+					<th scope="col" class={th}>Sale</th>
+					<th scope="col" class={th}>District</th>
+					<th scope="col" class={th}>Tenure</th>
 				</tr>
 			</thead>
 			<tbody>
 				{#each visible as r, i (i)}
-					<tr class="border-b border-ghost-200/40 transition hover:bg-ghost-50/70 dark:border-ink-600/30 dark:hover:bg-ink-800/40">
-						<td class="whitespace-nowrap px-3 py-2.5 text-ghost-500">{fmtMonth(r.date)}</td>
-						<td class="px-3 py-2.5">
+					<tr class="transition-colors hover:bg-neon-cyan/[0.045]">
+						<td class="{td} whitespace-nowrap text-ghost-600">{fmtMonth(r.date)}</td>
+						<td class={td}>
 							<a
-								href="{base}/?sel={encodeURIComponent(r.project)}&tab=txns"
-								class="font-medium text-ink-900 hover:text-neon-cyan dark:text-white dark:hover:text-neon-cyan"
-								title="View full transaction history"
-							>{r.project}</a>
-							<div class="text-xs text-ghost-500">{r.street}</div>
+								href={historyHref(r.project)}
+								class="font-medium text-ink-900 transition hover:text-neon-cyan"
+								title="View full transaction history">{r.project}</a
+							>
+							<div class="text-[12.5px] text-ghost-600">{r.street}</div>
 						</td>
-						<td class="whitespace-nowrap px-3 py-2.5 font-medium text-ink-900 dark:text-ghost-100">{fmtPriceFull(r.price)}</td>
-						<td class="whitespace-nowrap px-3 py-2.5 text-ink-700 dark:text-ghost-200">{fmtPsf(r.psf)}</td>
-						<td class="whitespace-nowrap px-3 py-2.5 text-ghost-600 dark:text-ghost-300">{r.areaSqft.toLocaleString()} sqft</td>
-						<td class="whitespace-nowrap px-3 py-2.5 text-ghost-600 dark:text-ghost-300">{r.floorRange || '—'}</td>
-						<td class="whitespace-nowrap px-3 py-2.5 text-ghost-600 dark:text-ghost-300">{SALE_LABELS[r.typeOfSale as SaleCode] ?? '—'}</td>
-						<td class="whitespace-nowrap px-3 py-2.5 text-ghost-500" title={REGION_LABELS[r.region] ?? ''}>D{r.district} · {r.region}</td>
-						<td class="whitespace-nowrap px-3 py-2.5 text-ghost-500">{r.tenureClass}</td>
+						<td class="{td} text-right whitespace-nowrap font-medium text-ink-900">{fmtPriceFull(r.price)}</td>
+						<td class="{td} text-right whitespace-nowrap text-ink-700">{fmtPsf(r.psf)}</td>
+						<td class="{td} text-right whitespace-nowrap text-ghost-600">{r.areaSqft.toLocaleString()} sqft</td>
+						<td class="{td} whitespace-nowrap text-ghost-600">{r.floorRange || '—'}</td>
+						<td class="{td} whitespace-nowrap text-ghost-600">{SALE_LABELS[r.typeOfSale as SaleCode] ?? '—'}</td>
+						<td class="{td} whitespace-nowrap text-ghost-600" title={REGION_LABELS[r.region] ?? ''}>D{r.district} · {r.region}</td>
+						<td class="{td} whitespace-nowrap text-ghost-600">{r.tenureClass}</td>
 					</tr>
 				{/each}
 				{#if visible.length === 0}
-					<tr><td colspan="9" class="px-3 py-8 text-center text-sm text-ghost-500">No transactions match these filters.</td></tr>
+					<tr><td colspan="9" class="px-3 py-8 text-center text-[15px] text-ghost-600">No transactions match these filters.</td></tr>
 				{/if}
 			</tbody>
 		</table>
 	</section>
 
-	<p class="flex items-center gap-2 text-[11px] text-ghost-500">
-		<span class="dot-live"></span>
-		Most recent {meta?.recentCount?.toLocaleString() ?? rows.length.toLocaleString()} caveats across all projects · derived from URA data, never the raw feed
+	<p class="tabular mt-4 text-[13px] text-ghost-600">
+		Most recent {meta?.recentCount?.toLocaleString() ?? rows.length.toLocaleString()} caveats across all
+		projects · derived from URA data, never the raw feed
 	</p>
 {/if}
