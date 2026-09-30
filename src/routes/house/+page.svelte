@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { page } from '$app/stores';
-	import { replaceState } from '$app/navigation';
+	import { afterNavigate, replaceState } from '$app/navigation';
 	import HouseViewer from '$lib/components/HouseViewer.svelte';
 	import type { NavigationMode } from '$lib/house/navigation';
 	import {
@@ -54,26 +54,38 @@
 				? 'walk'
 				: 'orbit';
 		if (comparison === theme) comparison = themes.find((item) => item.id !== theme)!.id;
-		ready = true;
 		const changed = () => {
 			fullscreen = document.fullscreenElement === stage;
 		};
 		document.addEventListener('fullscreenchange', changed);
 		return () => document.removeEventListener('fullscreenchange', changed);
 	});
+	// replaceState needs the router. During hydration SvelteKit has not yet
+	// assigned its root component, so syncing the URL from onMount threw
+	// "Cannot read properties of undefined (reading '$set')". afterNavigate
+	// first fires once the initial navigation has finished.
+	afterNavigate(() => {
+		ready = true;
+	});
 	$effect(() => {
 		if (!ready) return;
-		const url = new URL($page.url);
-		url.searchParams.set('theme', theme);
-		url.searchParams.set('view', camera);
-		url.searchParams.set('mode', mode);
-		if (mode === 'explore') url.searchParams.set('navigation', navigation);
-		else url.searchParams.delete('navigation');
-		if (mode === 'compare') url.searchParams.set('with', comparison);
-		else url.searchParams.delete('with');
-		// This URL already includes the deployed base path; resolving it again would duplicate it.
-		// eslint-disable-next-line svelte/no-navigation-without-resolve
-		if (url.href !== $page.url.href) replaceState(url, $page.state);
+		const next = { theme, camera, mode, navigation, comparison };
+		// Shallow routing updates page.state but never page.url, so compare with
+		// the real address bar. Reading $page here would re-run this effect after
+		// every replaceState and loop (effect_update_depth_exceeded).
+		untrack(() => {
+			const url = new URL(window.location.href);
+			url.searchParams.set('theme', next.theme);
+			url.searchParams.set('view', next.camera);
+			url.searchParams.set('mode', next.mode);
+			if (next.mode === 'explore') url.searchParams.set('navigation', next.navigation);
+			else url.searchParams.delete('navigation');
+			if (next.mode === 'compare') url.searchParams.set('with', next.comparison);
+			else url.searchParams.delete('with');
+			// This URL already includes the deployed base path; resolving it again would duplicate it.
+			// eslint-disable-next-line svelte/no-navigation-without-resolve
+			if (url.href !== window.location.href) replaceState(url, $page.state);
+		});
 	});
 	$effect(() => {
 		void imageUrl;
@@ -141,10 +153,19 @@
 	<meta name="theme-color" content="#101411" />
 </svelte:head>
 
+{#snippet icon(name: 'cube' | 'expand' | 'check' | 'close' | 'split')}
+	<svg class="icon" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		{#if name === 'cube'}<path d="M8 1.8 13.5 5v6L8 14.2 2.5 11V5z M2.5 5 8 8.2 13.5 5 M8 8.2v6" />
+		{:else if name === 'expand'}<path d="M2.5 6V2.5H6 M10 2.5h3.5V6 M13.5 10v3.5H10 M6 13.5H2.5V10" />
+		{:else if name === 'check'}<path d="m3 8.5 3.2 3L13 4.5" />
+		{:else if name === 'close'}<path d="m4 4 8 8 M12 4l-8 8" />
+		{:else}<path d="M6 4 2 8l4 4 M10 4l4 4-4 4" />{/if}
+	</svg>
+{/snippet}
+
 <section class="house-studio" aria-labelledby="studio-title">
 	<header class="studio-heading">
 		<div>
-			<p class="eyebrow"><span></span> INTERIOR DESIGN <b>/</b> HOUSE STUDIO</p>
 			<h1 id="studio-title">One floor plan. <em>Four ways.</em></h1>
 			<p class="intro">
 				Interior design references for a three-bedroom renovation, rendered in Blender and walkable
@@ -152,8 +173,8 @@
 			</p>
 		</div>
 		<div class="property-meta">
-			<span>THREE BEDROOMS</span><strong>1,647 <small>sq ft</small></strong>
-			<p>Owner-reported area</p>
+			<strong>1,647 <small>sq ft</small></strong>
+			<p>Three bedrooms · owner-reported area</p>
 		</div>
 	</header>
 
@@ -164,21 +185,21 @@
 					<button
 						class:active={mode === 'render'}
 						aria-pressed={mode === 'render'}
-						onclick={() => (mode = 'render')}>Blender renders</button
+						onclick={() => (mode = 'render')}><span class="label-long">Blender renders</span><span class="label-short">Renders</span></button
 					>
 					<button
 						class:active={mode === 'compare'}
 						aria-pressed={mode === 'compare'}
-						onclick={() => (mode = 'compare')}>Compare themes</button
+						onclick={() => (mode = 'compare')}><span class="label-long">Compare themes</span><span class="label-short">Compare</span></button
 					>
 					<button
 						class:active={mode === 'explore'}
 						aria-pressed={mode === 'explore'}
-						onclick={openExplorer}><span class="cube">◇</span> Explore 3D</button
+						onclick={openExplorer}>{@render icon('cube')} Explore 3D</button
 					>
 				</div>
 				<button class="expand-button" onclick={toggleFullscreen} aria-label="Enter fullscreen"
-					>⛶ <span>Expand</span></button
+					>{@render icon('expand')} <span>Expand</span></button
 				>
 			</div>
 			<div class="stage" class:in-fullscreen={fullscreen} bind:this={stage}>
@@ -222,11 +243,10 @@
 									bind:value={split}
 									aria-valuetext={`${split}% ${compareTheme.name}`}
 								/>
-								<div class="split-line" style:left={`${split}%`}><span>‹ ›</span></div>
+								<div class="split-line" style:left={`${split}%`}><span>{@render icon('split')}</span></div>
 								<div class="compare-label left">{compareTheme.name}</div>
 								<div class="compare-label right">{selectedTheme.name}</div>
 							{:else}
-								<div class="render-tag"><i></i> RENDERED IN BLENDER</div>
 								<div class="image-caption">
 									<span>{selectedView.group}</span>
 									<h2>{selectedView.name}</h2>
@@ -244,41 +264,20 @@
 						>{/if}
 				{/if}
 				{#if fullscreen}<button class="exit-fullscreen" onclick={toggleFullscreen}
-						>Close fullscreen ×</button
+						>Close fullscreen</button
 					>{/if}
 			</div>
-			{#if mode === 'compare'}
-				<div class="comparison-controls">
-					<label for="compare-theme"
+			<div class="view-info">
+				{#if mode === 'compare'}
+					<label class="compare-with" for="compare-theme"
 						>Compare with <select id="compare-theme" bind:value={comparison}
 							>{#each themes.filter((item) => item.id !== theme) as item (item.id)}<option
 									value={item.id}>{item.name}</option
 								>{/each}</select
 						></label
 					>
-					<label class="slider-label" for="comparison-split"
-						><span>Drag to compare</span><input
-							id="comparison-split"
-							type="range"
-							min="0"
-							max="100"
-							bind:value={split}
-							aria-valuetext={`${split}% ${compareTheme.name}, ${100 - split}% ${selectedTheme.name}`}
-						/></label
-					>
-				</div>
-			{/if}
-			<div class="view-info">
-				<p>
-					<span class="small-dot"></span>{mode === 'explore'
-						? navigation === 'walk'
-							? 'Walking the model · pick a room below to jump there'
-							: 'Whole-house view · textured furniture and soft shadows'
-						: mode === 'compare'
-							? 'Same camera & render tier · slide to compare finishes'
-							: 'Native Blender render · original framing & colour treatment'}
-				</p>
-				<div>
+				{/if}
+				<div class="pager">
 					<button onclick={() => step(-1)} aria-label="Previous room view">←</button><span
 						>{String(views.findIndex((item) => item.id === camera) + 1).padStart(2, '0')} / 20</span
 					><button onclick={() => step(1)} aria-label="Next room view">→</button>
@@ -288,19 +287,18 @@
 
 		<aside class="design-panel" aria-label="Design themes">
 			<div class="panel-top">
-				<p class="eyebrow">THE MATERIAL PALETTE</p>
-				<h2>Four material<br />directions.</h2>
+				<h2>Four material <br />directions.</h2>
 				<p>Each is a complete scheme over the same architectural shell.</p>
 			</div>
 			<div class="theme-list">
-				{#each themes as item, index (item.id)}<button
+				{#each themes as item (item.id)}<button
 						class="theme-card"
 						class:selected={theme === item.id}
 						aria-pressed={theme === item.id}
 						onclick={() => chooseTheme(item.id)}
-						><span class="theme-number">0{index + 1}</span><span class="theme-content"
+						><span class="theme-content"
 							><span class="theme-title"
-								>{item.name}<span class="theme-check">{theme === item.id ? '✓' : '↗'}</span></span
+								>{item.name}{#if theme === item.id}<span class="theme-check">{@render icon('check')}</span>{/if}</span
 							><span class="theme-note">{item.note}</span><span class="swatches" aria-hidden="true"
 								>{#each item.colors as color (color)}<i style:background={color}></i>{/each}</span
 							></span
@@ -308,19 +306,14 @@
 					>{/each}
 			</div>
 			<div class="panel-bottom">
-				<span>NAVIGATION</span>
-				<p>Pick a theme here.<br />Pick a room below.</p>
-				<button onclick={copyLink}>Copy this view <span>↗</span></button>
+				<button onclick={copyLink}>Copy link to this view <span aria-hidden="true">↗</span></button>
 			</div>
 		</aside>
 	</div>
 
 	<section class="space-section" aria-labelledby="spaces-title">
 		<div class="space-heading">
-			<div>
-				<p class="eyebrow">A CLOSER LOOK</p>
-				<h2 id="spaces-title">Room by room.</h2>
-			</div>
+			<h2 id="spaces-title">Room by room.</h2>
 			<p>20 viewpoints <span>·</span> 4 concepts</p>
 		</div>
 		<div class="space-filters" aria-label="Filter spaces">
@@ -358,7 +351,7 @@
 	</div>
 	{#if message}<div class="toast" role="status">
 			<p>{message}</p>
-			<button onclick={() => (message = '')} aria-label="Dismiss message">×</button>
+			<button onclick={() => (message = '')} aria-label="Dismiss message">{@render icon('close')}</button>
 		</div>{/if}
 </section>
 
@@ -377,27 +370,6 @@
 		gap: 24px;
 		padding: 30px 0 38px;
 	}
-	.eyebrow {
-		display: flex;
-		align-items: center;
-		gap: 9px;
-		font-family: var(--body);
-		font-size: 10px;
-		font-weight: 500;
-		letter-spacing: 0.18em;
-		color: var(--gold);
-	}
-	.eyebrow span {
-		height: 5px;
-		width: 5px;
-		border-radius: 50%;
-		background: var(--gold);
-	}
-	.eyebrow b {
-		font-weight: 400;
-		color: #777b6e;
-		margin: 0 3px;
-	}
 	h1 {
 		font-family: Georgia, 'Times New Roman', serif;
 		font-size: clamp(31px, 3.7vw, 54px);
@@ -411,7 +383,7 @@
 		color: #bfc2ad;
 	}
 	.intro {
-		font-size: 14px;
+		font-size: 15px;
 		color: var(--muted);
 	}
 	.property-meta {
@@ -419,11 +391,6 @@
 		padding-left: 30px;
 		border-left: 1px solid var(--line);
 		min-width: 156px;
-	}
-	.property-meta > span {
-		font-size: 9px;
-		letter-spacing: 0.14em;
-		color: var(--muted);
 	}
 	.property-meta strong {
 		display: block;
@@ -438,8 +405,8 @@
 		letter-spacing: 0;
 	}
 	.property-meta p {
-		font-size: 10px;
-		color: #999e8e;
+		font-size: 12.5px;
+		color: #a9ad9d;
 	}
 	.studio-grid {
 		display: grid;
@@ -473,7 +440,10 @@
 	}
 	.mode-switch button {
 		padding: 9px 12px;
-		font-size: 11px;
+		font-size: 13px;
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
 		color: #b4b7a8;
 		white-space: nowrap;
 		border: 1px solid transparent;
@@ -488,20 +458,14 @@
 		border-color: #c5ab7c34;
 		color: #d4bd96;
 	}
-	.cube {
-		margin-right: 3px;
-		font-size: 15px;
-		line-height: 0;
-	}
 	.expand-button {
-		color: #b7bcad;
-		font-size: 19px;
+		color: #c2c6b6;
+		font-size: 12.5px;
 		display: flex;
 		align-items: center;
 		gap: 6px;
-	}
-	.expand-button span {
-		font-size: 10px;
+		padding: 6px 8px;
+		border-radius: 3px;
 	}
 	.stage {
 		position: relative;
@@ -530,26 +494,6 @@
 		height: 100%;
 		object-fit: contain;
 	}
-	.render-tag {
-		position: absolute;
-		top: 23px;
-		left: 24px;
-		display: flex;
-		align-items: center;
-		gap: 7px;
-		background: #131812c7;
-		color: #f0ecdd;
-		padding: 7px 10px;
-		font-size: 8px;
-		letter-spacing: 0.13em;
-		border: 1px solid #ffffff24;
-	}
-	.render-tag i {
-		height: 4px;
-		width: 4px;
-		border-radius: 50%;
-		background: #c9b281;
-	}
 	.image-caption {
 		position: absolute;
 		left: 28px;
@@ -558,7 +502,7 @@
 		pointer-events: none;
 	}
 	.image-caption > span {
-		font-size: 9px;
+		font-size: 11px;
 		text-transform: uppercase;
 		letter-spacing: 0.18em;
 		color: #dbd5c4;
@@ -571,7 +515,7 @@
 		font-weight: 400;
 	}
 	.image-caption p {
-		font-size: 11px;
+		font-size: 13px;
 		color: #ddd7c7;
 		margin-top: 4px;
 	}
@@ -581,41 +525,31 @@
 	}
 	.view-info {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		justify-content: space-between;
 		padding: 13px 20px;
 		gap: 14px;
 		border-top: 1px solid var(--line);
 	}
-	.view-info p {
-		display: flex;
-		align-items: center;
-		gap: 7px;
-		font-size: 9px;
-		color: #a6ac9c;
-	}
-	.small-dot {
-		width: 4px;
-		height: 4px;
-		border-radius: 50%;
-		background: #98a582;
-		flex-shrink: 0;
-	}
 	.view-info > div {
 		display: flex;
 		align-items: center;
-		gap: 12px;
+		gap: 10px;
 		white-space: nowrap;
+		margin-left: auto;
 	}
 	.view-info > div span {
 		font-family: var(--font-mono);
-		font-size: 9px;
-		color: #adb29f;
+		font-size: 12px;
+		color: #b9bdab;
 	}
 	.view-info button {
 		font-size: 18px;
 		color: #d6cfbb;
-		min-width: 24px;
+		min-width: 36px;
+		min-height: 36px;
+		border-radius: 3px;
 	}
 	.design-panel {
 		border-left: 1px solid var(--line);
@@ -633,10 +567,10 @@
 		letter-spacing: -0.025em;
 	}
 	.panel-top > p:last-child {
-		font-size: 11px;
+		font-size: 13px;
 		color: var(--muted);
 		line-height: 1.7;
-		max-width: 205px;
+		max-width: 230px;
 	}
 	.theme-list {
 		display: grid;
@@ -646,8 +580,8 @@
 	.theme-card {
 		display: flex;
 		text-align: left;
-		gap: 12px;
-		padding: 14px 11px;
+		gap: 0;
+		padding: 14px 13px;
 		border: 1px solid #ffffff10;
 		border-radius: 3px;
 		background: #ffffff02;
@@ -660,15 +594,6 @@
 		border-color: #b89c636e;
 		background: #bc9c5c0b;
 	}
-	.theme-number {
-		font-family: var(--font-mono);
-		color: #818c77;
-		font-size: 9px;
-		padding-top: 3px;
-	}
-	.selected .theme-number {
-		color: var(--gold);
-	}
 	.theme-content {
 		flex: 1;
 	}
@@ -676,18 +601,18 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		font-size: 13px;
+		font-size: 14px;
 		color: #e0e2d2;
 	}
 	.theme-check {
-		font-size: 12px;
+		display: inline-flex;
 		color: var(--gold);
 	}
 	.theme-note {
 		display: block;
-		font-size: 9px;
+		font-size: 12px;
 		line-height: 1.6;
-		color: #a4aa97;
+		color: #aeb3a1;
 		margin-top: 4px;
 	}
 	.swatches {
@@ -705,23 +630,13 @@
 		margin-top: auto;
 		padding-top: 24px;
 	}
-	.panel-bottom > span {
-		color: #9da48f;
-		font-size: 8px;
-		letter-spacing: 0.14em;
-	}
-	.panel-bottom p {
-		font-size: 11px;
-		color: #b0b5a2;
-		margin: 8px 0 16px;
-	}
 	.panel-bottom button {
 		border-top: 1px solid var(--line);
 		padding-top: 13px;
 		width: 100%;
 		display: flex;
 		justify-content: space-between;
-		font-size: 11px;
+		font-size: 13px;
 		color: #cdb58a;
 	}
 	.space-section {
@@ -737,11 +652,11 @@
 		font-family: Georgia, serif;
 		font-weight: 400;
 		font-size: 29px;
-		margin-top: 9px;
+		margin-top: 0;
 		letter-spacing: -0.03em;
 	}
 	.space-heading > p {
-		font-size: 10px;
+		font-size: 12.5px;
 		color: #a6af99;
 		margin-bottom: 3px;
 		white-space: nowrap;
@@ -758,7 +673,7 @@
 	}
 	.space-filters button {
 		color: #a7af9b;
-		font-size: 11px;
+		font-size: 13px;
 		white-space: nowrap;
 		padding-bottom: 12px;
 		border-bottom: 1px solid transparent;
@@ -806,8 +721,8 @@
 		position: absolute;
 		bottom: 8px;
 		left: 9px;
-		font-size: 7px;
-		letter-spacing: 0.12em;
+		font-size: 10.5px;
+		letter-spacing: 0.08em;
 		color: #eee8d7;
 		background: #12160ee0;
 		padding: 3px 5px;
@@ -817,7 +732,7 @@
 		top: 8px;
 		right: 8px;
 		font-style: normal;
-		font-size: 7px;
+		font-size: 10.5px;
 		letter-spacing: 0.08em;
 		color: #13190d;
 		background: #c5ab7c;
@@ -827,7 +742,7 @@
 		display: block;
 		color: #dce0cd;
 		font-weight: 400;
-		font-size: 12px;
+		font-size: 14px;
 		margin-top: 11px;
 	}
 	.room-card.selected strong {
@@ -836,7 +751,7 @@
 	.room-detail {
 		display: block;
 		color: #9ca48e;
-		font-size: 9px;
+		font-size: 12px;
 		margin-top: 2px;
 	}
 	.studio-footnote {
@@ -850,8 +765,32 @@
 	}
 	.studio-footnote a {
 		color: #c6ad80;
-		font-size: 11px;
+		font-size: 13px;
 		white-space: nowrap;
+	}
+	.compare-with {
+		white-space: nowrap;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-size: 12.5px;
+		color: #b7bdaa;
+	}
+	.compare-with select {
+		background: #1c2417;
+		color: #e2ddca;
+		border: 1px solid #a5ad9040;
+		padding: 6px 30px 6px 10px;
+		font-family: var(--body);
+		font-size: 13px;
+		border-radius: 3px;
+	}
+	.label-short {
+		display: none;
+	}
+	.icon {
+		flex-shrink: 0;
+		display: block;
 	}
 	.compare-overlay {
 		position: absolute;
@@ -902,7 +841,7 @@
 		z-index: 3;
 		background: #141910e8;
 		color: #e6d6b6;
-		font-size: 11px;
+		font-size: 12.5px;
 		padding: 8px 12px;
 	}
 	.compare-label.left {
@@ -910,40 +849,6 @@
 	}
 	.compare-label.right {
 		right: 20px;
-	}
-	.comparison-controls {
-		display: flex;
-		gap: 20px;
-		padding: 14px 20px;
-		align-items: center;
-		border-top: 1px solid var(--line);
-	}
-	.comparison-controls label {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		font-size: 10px;
-		color: #afb79f;
-	}
-	.comparison-controls select {
-		background: #1c2417;
-		color: #ddd8c5;
-		border: 1px solid #a5ad9030;
-		padding: 5px 28px 5px 8px;
-		font-family: var(--body);
-		font-size: 10px;
-		border-radius: 3px;
-	}
-	.slider-label {
-		flex: 1;
-	}
-	.slider-label span {
-		white-space: nowrap;
-	}
-	.slider-label input {
-		min-width: 60px;
-		width: 100%;
-		accent-color: #c5ab7c;
 	}
 	.image-error {
 		position: absolute;
@@ -1012,7 +917,10 @@
 		box-shadow: 0 8px 50px #0008;
 	}
 	.toast button {
-		font-size: 22px;
+		display: grid;
+		place-items: center;
+		min-width: 32px;
+		min-height: 32px;
 	}
 	@media (min-width: 1450px) {
 		.stage {
@@ -1020,6 +928,9 @@
 		}
 	}
 	@media (max-width: 1100px) {
+		.expand-button span {
+			display: none;
+		}
 		.studio-grid {
 			grid-template-columns: minmax(0, 1fr) 248px;
 		}
@@ -1034,16 +945,6 @@
 		}
 		.mode-switch button {
 			padding: 8px;
-		}
-		.expand-button span {
-			display: none;
-		}
-		.comparison-controls {
-			flex-wrap: wrap;
-			gap: 10px;
-		}
-		.slider-label {
-			min-width: 200px;
 		}
 	}
 	@media (max-width: 850px) {
@@ -1086,6 +987,12 @@
 		}
 	}
 	@media (max-width: 560px) {
+		.label-long {
+			display: none;
+		}
+		.label-short {
+			display: inline;
+		}
 		.studio-heading {
 			padding: 23px 0 28px;
 		}
@@ -1101,50 +1008,44 @@
 		}
 		.intro {
 			max-width: 280px;
-			font-size: 12px;
-		}
-		.eyebrow {
-			font-size: 8px;
+			font-size: 14px;
 		}
 		.view-toolbar {
 			padding: 10px 7px;
 			gap: 3px;
 		}
+		.mode-switch {
+			gap: 2px;
+			min-width: 0;
+			overflow-x: auto;
+			scrollbar-width: none;
+		}
 		.mode-switch button {
-			font-size: 9px;
-			padding: 8px 6px;
+			font-size: 12px;
+			padding: 8px 5px;
+			gap: 4px;
 		}
 		.expand-button {
-			padding: 0 6px;
+			padding: 0 2px;
 		}
 		.stage {
 			aspect-ratio: 4 / 3;
-		}
-		.render-tag {
-			top: 12px;
-			left: 13px;
-			font-size: 6px;
-			padding: 5px 7px;
 		}
 		.image-caption {
 			left: 15px;
 			bottom: 13px;
 		}
 		.image-caption > span {
-			font-size: 7px;
+			font-size: 10.5px;
 		}
 		.image-caption h2 {
 			font-size: 24px;
 		}
 		.image-caption p {
-			font-size: 9px;
+			font-size: 12px;
 		}
 		.view-info {
 			padding: 10px 12px;
-		}
-		.view-info p {
-			font-size: 8px;
-			max-width: 205px;
 		}
 		.view-info > div {
 			gap: 6px;
@@ -1154,13 +1055,10 @@
 			padding: 12px 8px;
 		}
 		.theme-title {
-			font-size: 11px;
+			font-size: 13px;
 		}
 		.theme-note {
-			font-size: 8px;
-		}
-		.theme-number {
-			font-size: 7px;
+			font-size: 11.5px;
 		}
 		.swatches i {
 			width: 20px;
@@ -1176,14 +1074,14 @@
 			max-width: 220px;
 		}
 		.space-heading > p {
-			font-size: 8px;
+			font-size: 12px;
 			margin-top: 4px;
 		}
 		.space-filters {
 			gap: 18px;
 		}
 		.space-filters button {
-			font-size: 10px;
+			font-size: 12.5px;
 		}
 		.room-card {
 			flex-basis: 163px;
@@ -1197,7 +1095,7 @@
 			gap: 13px;
 		}
 		.compare-label {
-			font-size: 9px;
+			font-size: 11.5px;
 			padding: 5px 8px;
 			bottom: 14px;
 		}
@@ -1206,9 +1104,6 @@
 		}
 		.compare-label.right {
 			right: 12px;
-		}
-		.comparison-controls {
-			padding: 12px;
 		}
 	}
 </style>

@@ -94,7 +94,6 @@
 	{#if loading || error}
 		<div class="viewer-status" role="status" aria-live="polite">
 			{#if error}
-				<span class="status-symbol">◇</span>
 				<h3>Keep exploring in renders</h3>
 				<p>{error}</p>
 				<button onclick={onfallback}>View Blender renders ↗</button>
@@ -108,17 +107,16 @@
 			{/if}
 		</div>
 	{:else}
-		<div class="live-label"><i></i> TEXTURED 3D</div>
 		<div class="travel-switch" aria-label="Move around the house">
 			<button
 				class:active={navigation === 'orbit'}
 				aria-pressed={navigation === 'orbit'}
-				onclick={onoverview}>◇ Whole house</button
+				onclick={onoverview}>Whole house</button
 			>
 			<button
 				class:active={navigation === 'walk'}
 				aria-pressed={navigation === 'walk'}
-				onclick={onwalk}>↗ Walk inside</button
+				onclick={onwalk}>Walk inside</button
 			>
 		</div>
 		<div class="viewer-help">
@@ -139,12 +137,12 @@
 						onkeyup={(event) => keyboard(event, item.direction, false)}
 						onblur={() => viewer?.hold(item.direction, false)}>{item.symbol}</button
 					>{/each}
-				<span>HOLD TO WALK</span>
+				<span>Hold to walk</span>
 			</div>
 		{/if}
 		<div class="viewer-controls" aria-label="3D camera controls">
-			<button onclick={() => viewer?.rotate(-1)} aria-label="Rotate view left">↶</button>
-			<button onclick={() => viewer?.rotate(1)} aria-label="Rotate view right">↷</button>
+			<button onclick={() => viewer?.rotate(-1)} aria-label="Rotate view left"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 6.5A5 5 0 1 1 3 9.5 M3.5 2.8v3.7h3.7" /></svg></button>
+			<button onclick={() => viewer?.rotate(1)} aria-label="Rotate view right"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.5 6.5A5 5 0 1 0 13 9.5 M12.5 2.8v3.7H8.8" /></svg></button>
 			{#if navigation === 'orbit'}
 				<button onclick={() => viewer?.zoom(0.8)} aria-label="Zoom in">+</button>
 				<button onclick={() => viewer?.zoom(1.25)} aria-label="Zoom out">−</button>
@@ -215,10 +213,6 @@
 	.viewer-status button {
 		margin-top: 18px;
 	}
-	.status-symbol {
-		color: #c3a771;
-		font-size: 38px;
-	}
 	.loading-ring {
 		width: 32px;
 		height: 32px;
@@ -238,24 +232,6 @@
 		color: #b8b3a7;
 		margin-top: 8px;
 	}
-	.live-label {
-		position: absolute;
-		top: 20px;
-		left: 20px;
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		font-size: 10px;
-		letter-spacing: 0.1em;
-		padding: 8px 10px;
-		background: #101410e6;
-	}
-	.live-label i {
-		width: 5px;
-		height: 5px;
-		border-radius: 50%;
-		background: #c6ba8e;
-	}
 	.travel-switch {
 		position: absolute;
 		top: 16px;
@@ -264,7 +240,7 @@
 		gap: 4px;
 	}
 	.travel-switch button {
-		font-size: 11px;
+		font-size: 13px;
 		background: #101610e8;
 	}
 	.travel-switch button.active {
@@ -310,8 +286,8 @@
 	.walk-pad span {
 		grid-column: 1 / 4;
 		text-align: center;
-		font-size: 7px;
-		letter-spacing: 0.12em;
+		font-size: 11px;
+		letter-spacing: 0.02em;
 		color: #d7ceb9;
 		background: #101610d9;
 		padding: 3px 0;
@@ -327,7 +303,7 @@
 		left: 20px;
 		bottom: 68px;
 		right: 160px;
-		font-size: 11px;
+		font-size: 12.5px;
 		color: #eee6d8;
 		padding: 5px 8px;
 		background: #101410d9;
@@ -348,7 +324,7 @@
 		gap: 8px;
 		padding: 8px 10px;
 		background: #101410e6;
-		font-size: 11px;
+		font-size: 12.5px;
 		margin-left: auto;
 	}
 	input {
@@ -367,10 +343,7 @@
 		.viewer-help {
 			bottom: 132px;
 			right: 154px;
-			font-size: 9px;
-		}
-		.live-label {
-			display: none;
+			font-size: 11.5px;
 		}
 		.walk-pad {
 			bottom: 128px;
@@ -385,7 +358,7 @@
 			gap: 4px;
 		}
 		.viewer-controls button {
-			font-size: 11px;
+			font-size: 12px;
 			padding: 8px;
 		}
 		label {
